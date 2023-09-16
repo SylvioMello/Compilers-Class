@@ -1,1 +1,1 @@
-a $_ $ = "Um texto";
+a = "Um \"texto" 'd\'agua' 'd''ouro " ""';
