@@ -1,1 +1,3 @@
-a = "Um \"texto" 'd\'agua' 'd''ouro " ""';
+/* Texto
++ / * a
+*/
