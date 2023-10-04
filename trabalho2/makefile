@@ -1,11 +1,11 @@
 all: saida entrada.txt
 	./saida < entrada.txt
 
-lex.yy.c: scan.lex
-	lex scan.lex
+lex.yy.c: tradutor.l
+	lex tradutor.l
 
-saida: lex.yy.c main.cc 
-	g++ -std=c++17 main.cc -o saida -lfl
+saida: lex.yy.c
+	g++ lex.yy.c -o saida -lfl
 	
 clean:
 	rm saida lex.yy.c
