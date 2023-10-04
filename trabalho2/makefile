@@ -5,7 +5,7 @@ lex.yy.c: tradutor.l
 	lex tradutor.l
 
 saida: lex.yy.c
-	g++ lex.yy.c -o saida -ll
+	g++ -std=c++17 lex.yy.c -o saida -ll
 	
 clean:
 	rm saida lex.yy.c
