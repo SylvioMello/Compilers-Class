@@ -360,11 +360,13 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[25] =
+static const flex_int16_t yy_accept[46] =
     {   0,
-        0,    0,    9,    7,    1,    1,    2,    6,    6,    6,
-        6,    2,    6,    6,    6,    6,    6,    6,    4,    3,
-        6,    6,    5,    0
+        0,    0,    9,    7,    1,    1,    7,    7,    7,    7,
+        3,    4,    4,    0,    0,    5,    0,    0,    0,    0,
+        0,    6,    6,    3,    0,    4,    4,    0,    0,    0,
+        5,    0,    0,    0,    6,    4,    0,    0,    5,    5,
+        0,    5,    4,    2,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -372,17 +374,17 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    4,    4,    4,
-        4,    4,    4,    4,    4,    4,    4,    1,    1,    1,
-        1,    1,    1,    1,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        1,    1,    1,    1,    5,    1,    6,    7,    8,    9,
+        1,    2,    1,    4,    1,    1,    1,    1,    5,    1,
+        1,    1,    6,    1,    6,    7,    1,    8,    8,    8,
+        8,    8,    8,    8,    8,    8,    8,    1,    1,    1,
+        1,    1,    1,    1,    9,    9,    9,    9,   10,    9,
+        9,    9,    9,    9,    9,    9,    9,    9,    9,    9,
+        9,    9,    9,    9,    9,    9,    9,    9,    9,    9,
+        1,   11,    1,    1,    9,    1,    9,    9,    9,    9,
 
-       10,    5,    5,   11,   12,    5,    5,   13,    5,   14,
-       15,    5,    5,   16,    5,   17,   18,    5,    5,    5,
-        5,    5,    1,    1,    1,    1,    1,    1,    1,    1,
+       10,    9,    9,    9,   12,    9,    9,    9,    9,   13,
+        9,   14,    9,   15,    9,   16,    9,    9,    9,    9,
+        9,    9,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -399,44 +401,60 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[19] =
+static const YY_CHAR yy_meta[17] =
     {   0,
-        1,    1,    1,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    2,    2,    2,    2
+        1,    1,    1,    1,    1,    1,    1,    2,    2,    2,
+        1,    2,    2,    2,    2,    2
     } ;
 
-static const flex_int16_t yy_base[27] =
+static const flex_int16_t yy_base[52] =
     {   0,
-        0,   12,   33,   34,   34,   34,   28,    0,   20,   15,
-       15,   24,    0,   21,    5,    5,    3,   11,    0,    0,
-        4,    0,    0,   34,   24,    3
+        0,    0,   77,   78,   78,   78,   14,   15,   14,   68,
+       20,    0,   60,   28,   25,   70,   37,   32,   68,   33,
+       64,   63,   25,    0,   39,    0,   58,   65,   38,   64,
+       63,   61,   60,   56,   55,   49,   57,   56,   78,   42,
+       29,   19,    7,    0,   78,   49,   51,   17,   53,   55,
+       57
     } ;
 
-static const flex_int16_t yy_def[27] =
+static const flex_int16_t yy_def[52] =
     {   0,
-       25,   25,   24,   24,   24,   24,   24,   26,   26,   26,
-       26,   24,   26,   26,   26,   26,   26,   26,   26,   26,
-       26,   26,   26,    0,   24,   24
+       45,    1,   45,   45,   45,   45,   46,   47,   45,   45,
+       45,   48,   48,   46,   49,   45,   46,   47,   45,   47,
+       45,   11,   45,   11,   45,   48,   48,   45,   49,   50,
+       50,   51,   51,   45,   45,   48,   50,   50,   45,   50,
+       51,   51,   48,   48,    0,   45,   45,   45,   45,   45,
+       45
     } ;
 
-static const flex_int16_t yy_nxt[53] =
+static const flex_int16_t yy_nxt[95] =
     {   0,
-        4,    5,    6,    7,   13,   24,   24,    9,   10,   23,
-       24,   11,    4,    5,    6,    7,   22,   21,   20,    9,
-       10,   19,   18,   11,    8,    8,   17,   12,   16,   15,
-       14,   12,   24,    3,   24,   24,   24,   24,   24,   24,
-       24,   24,   24,   24,   24,   24,   24,   24,   24,   24,
-       24,   24
+        4,    5,    6,    7,    8,    9,   10,   11,   12,   12,
+        4,   12,   12,   13,   12,   12,   15,   16,   26,   19,
+       21,   22,   44,   39,   17,   20,   21,   24,   28,   25,
+       15,   16,   23,   39,   25,   29,   19,   33,   17,   15,
+       31,   37,   20,   20,   34,   39,   35,   17,   29,   14,
+       14,   18,   18,   15,   15,   38,   38,   41,   41,   39,
+       40,   43,   35,   35,   42,   39,   40,   39,   30,   36,
+       22,   23,   32,   30,   27,   23,   45,    3,   45,   45,
+       45,   45,   45,   45,   45,   45,   45,   45,   45,   45,
+       45,   45,   45,   45
+
     } ;
 
-static const flex_int16_t yy_chk[53] =
+static const flex_int16_t yy_chk[95] =
     {   0,
-        1,    1,    1,    1,   26,    0,    0,    1,    1,   22,
-        0,    1,    2,    2,    2,    2,   21,   18,   17,    2,
-        2,   16,   15,    2,   25,   25,   14,   12,   11,   10,
-        9,    7,    3,   24,   24,   24,   24,   24,   24,   24,
-       24,   24,   24,   24,   24,   24,   24,   24,   24,   24,
-       24,   24
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    7,    7,   48,    8,
+        9,    9,   43,   42,    7,    8,   11,   11,   15,   11,
+       14,   14,   23,   41,   23,   15,   18,   20,   14,   17,
+       17,   29,   18,   20,   25,   40,   25,   17,   29,   46,
+       46,   47,   47,   49,   49,   50,   50,   51,   51,   38,
+       37,   36,   35,   34,   33,   32,   31,   30,   28,   27,
+       22,   21,   19,   16,   13,   10,    3,   45,   45,   45,
+       45,   45,   45,   45,   45,   45,   45,   45,   45,   45,
+       45,   45,   45,   45
+
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -468,28 +486,28 @@ string lexema;
 
 int token;
 
-extern "C" int yylex();  
-
+void S();
 void A();
 void E();
 void E_linha();
 void T();
 void T_linha();
+void U();
 void F();
 void casa( int );
 
-enum { INT = 256, CHAR, DOUBLE, ID, CTE_INT };
+enum { ID = 256, NUM, PRINT, FLOAT, STRING };
 
 map<int,string> nome_tokens = {
-  { INT,     "int" },
-  { CHAR,    "char" },
-  { DOUBLE,  "double" },
-  { ID,      "nome de identificador" },
-  { CTE_INT, "constante inteira" }
+  { ID,     "nome de identificador" },
+  { NUM,    "numero" },
+  { PRINT,  "print"},
+  { FLOAT,  "float"},
+  { STRING, "string"}
 };
 
-#line 492 "lex.yy.c"
-#line 493 "lex.yy.c"
+#line 510 "lex.yy.c"
+#line 511 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -706,10 +724,10 @@ YY_DECL
 		}
 
 	{
-#line 44 "tradutor.l"
+#line 46 "tradutor.l"
 
 
-#line 713 "lex.yy.c"
+#line 731 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -736,13 +754,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 25 )
+				if ( yy_current_state >= 46 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 34 );
+		while ( yy_base[yy_current_state] != 78 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -769,45 +787,46 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 46 "tradutor.l"
+#line 48 "tradutor.l"
 { }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 47 "tradutor.l"
-{ return CTE_INT; }
+#line 49 "tradutor.l"
+{ lexema = yytext; return PRINT;   }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 48 "tradutor.l"
-{ return CHAR; }
+#line 51 "tradutor.l"
+{ lexema = yytext; return NUM; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 49 "tradutor.l"
-{ return INT; }
+#line 52 "tradutor.l"
+{ lexema = yytext; return ID;      }
 	YY_BREAK
 case 5:
+/* rule 5 can match eol */
 YY_RULE_SETUP
-#line 50 "tradutor.l"
-{ return DOUBLE; }
+#line 53 "tradutor.l"
+{ lexema = yytext; return STRING;  }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 52 "tradutor.l"
-{ return ID; }
+#line 54 "tradutor.l"
+{ lexema = yytext; return FLOAT;   }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 54 "tradutor.l"
+#line 56 "tradutor.l"
 { return yytext[0]; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 56 "tradutor.l"
+#line 58 "tradutor.l"
 ECHO;
 	YY_BREAK
-#line 811 "lex.yy.c"
+#line 830 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1104,7 +1123,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 25 )
+			if ( yy_current_state >= 46 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1132,11 +1151,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 25 )
+		if ( yy_current_state >= 46 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 24);
+	yy_is_jam = (yy_current_state == 45);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1812,7 +1831,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 56 "tradutor.l"
+#line 58 "tradutor.l"
 
 
 int next_token() {
@@ -1830,7 +1849,6 @@ string nome_token( int token ) {
   }
 }
 
-
 void casa( int esperado ) {
   if( token == esperado )
     token = next_token();
@@ -1841,14 +1859,19 @@ void casa( int esperado ) {
   }
 }
 
-void A() {
-  // Guardamos o lexema pois a função 'casa' altera o seu valor.
-  string temp = lexema; 
-  casa( ID );
-  cout << temp << endl ;
-  casa( '=' );
-  E();
-  printf( "=" );
+void S() {
+  A();
+  if(token == ';'){
+    casa(';');
+    S();
+  }
+}
+
+void A(){
+  switch( token ) {
+    case PRINT : casa(PRINT); E(); cout << "print #" << ' '; break;
+    case ID : cout << lexema << ' '; casa( ID ); casa('='); E(); cout << "= ^" << ' ';
+  }
 }
 
 void E() {
@@ -1858,50 +1881,45 @@ void E() {
 
 void E_linha() {
   switch( token ) {
-    case '+' : casa( '+' ); T(); printf(" +"); E_linha(); break;
-    case '-' : casa( '-' ); T(); printf(" -"); E_linha(); break;
+    case '+' : casa( '+' ); T(); cout << '+' << ' '; E_linha(); break;
+    case '-' : casa( '-' ); T(); cout << '-' << ' '; E_linha(); break;
   }
 }
 
 void T() {
-  F();
+  U();
   T_linha();
 }
 
 void T_linha() {
   switch( token ) {
-    case '*' : casa( '*' ); F(); printf(" *"); T_linha(); break;
-    case '/' : casa( '/' ); F(); printf(" /"); T_linha(); break;
+    case '*' : casa( '*' ); U(); cout << "*" << ' '; T_linha(); break;
+    case '/' : casa( '/' ); U(); cout << "/" << ' '; T_linha(); break;
+  }
+}
+
+void U(){
+  switch( token ) {
+    case '-' : cout << 0 << ' '; casa('-'); U(); cout <<  "-"  << ' '; break;
+    case '+' : cout << 0 << ' '; casa('+'); U(); cout <<  "+"  << ' '; break;
+    default:   F();
   }
 }
 
 void F() {
   switch( token ) {
-    case ID : {
-      string temp = lexema;
-      casa( ID );
-      cout << lexema.c_str() << endl; } 
-      break;
-    case CTE_INT : {
-      string temp = lexema;
-      casa( CTE_INT );
-      cout << "CTE_INT" << endl;}
-      break;
-    case '(': 
-      casa( '(' ); E(); casa( ')' ); break;
-    default:
-      cout << "Operando esperado, encontrado " << lexema << endl;
+    case ID      : cout << lexema << ' '; casa( ID );      break;
+    case NUM     : cout << lexema << ' '; casa( NUM );     break;
+    case FLOAT   : cout << lexema << ' '; casa ( FLOAT );  break;
+    case STRING  : cout << lexema << ' '; casa (STRING);   break;
+    case '('     : casa( '(' );      E(); casa( ')' );     break;
   }
 }
 
 int main() {
   token = next_token();
-  A();
-  
-  if( token == 0 )
-    cout << "Sintaxe ok!" << endl;
-  else
-    cout << "Caracteres encontrados após o final do programa" << endl;
+  S();
+  cout << '\n';
   
   return 0;
 }

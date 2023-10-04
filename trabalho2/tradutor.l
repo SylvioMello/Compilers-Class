@@ -12,44 +12,46 @@ string lexema;
 
 int token;
 
-extern "C" int yylex();  
-
+void S();
 void A();
 void E();
 void E_linha();
 void T();
 void T_linha();
+void U();
 void F();
 void casa( int );
 
-enum { INT = 256, CHAR, DOUBLE, ID, CTE_INT };
+enum { ID = 256, NUM, PRINT, FLOAT, STRING };
 
 map<int,string> nome_tokens = {
-  { INT,     "int" },
-  { CHAR,    "char" },
-  { DOUBLE,  "double" },
-  { ID,      "nome de identificador" },
-  { CTE_INT, "constante inteira" }
+  { ID,     "nome de identificador" },
+  { NUM,    "numero" },
+  { PRINT,  "print"},
+  { FLOAT,  "float"},
+  { STRING, "string"}
 };
 
 %}
 
-WS	    [ \n\t]
-DIGITO	[0-9]
-LETRA	  [A-Za-z_]
-
-NUM	    {DIGITO}+
-ID	    {LETRA}({LETRA}|{DIGITO})*
+WS	     [ \n\t]
+DIGITO	 [0-9]
+LETRA	   [A-Za-z_]
+ESCAPING ["][^"]*([\\]|["])["][^"]*["]|['][^']*([\\]|['])['][^']*[']
+STRING   (\"([^\"\n]*)\")|{ESCAPING}
+FLOAT    [-+]?{DIGITO}*\.?{DIGITO}+([eE][-+]?{DIGITO}+)?
+NUM	     {DIGITO}+
+ID	     {LETRA}({LETRA}|{DIGITO})*
 
 %%
 
 {WS}  		{ }
-{NUM} 		{ return CTE_INT; }
-"char"		{ return CHAR; }
-"int"		  { return INT; }
-"double"	{ return DOUBLE; }
+"print"   { lexema = yytext; return PRINT;   }
 
-{ID}		  { return ID; }
+{NUM} 		{ lexema = yytext; return NUM; }
+{ID}		  { lexema = yytext; return ID;      }
+{STRING}  { lexema = yytext; return STRING;  }
+{FLOAT}   { lexema = yytext; return FLOAT;   }
 
 .		      { return yytext[0]; }
 
@@ -70,7 +72,6 @@ string nome_token( int token ) {
   }
 }
 
-
 void casa( int esperado ) {
   if( token == esperado )
     token = next_token();
@@ -81,14 +82,19 @@ void casa( int esperado ) {
   }
 }
 
-void A() {
-  // Guardamos o lexema pois a função 'casa' altera o seu valor.
-  string temp = lexema; 
-  casa( ID );
-  cout << temp << endl ;
-  casa( '=' );
-  E();
-  printf( "=" );
+void S() {
+  A();
+  if(token == ';'){
+    casa(';');
+    S();
+  }
+}
+
+void A(){
+  switch( token ) {
+    case PRINT : casa(PRINT); E(); cout << "print #" << ' '; break;
+    case ID : cout << lexema << ' '; casa( ID ); casa('='); E(); cout << "= ^" << ' ';
+  }
 }
 
 void E() {
@@ -98,50 +104,45 @@ void E() {
 
 void E_linha() {
   switch( token ) {
-    case '+' : casa( '+' ); T(); printf(" +"); E_linha(); break;
-    case '-' : casa( '-' ); T(); printf(" -"); E_linha(); break;
+    case '+' : casa( '+' ); T(); cout << '+' << ' '; E_linha(); break;
+    case '-' : casa( '-' ); T(); cout << '-' << ' '; E_linha(); break;
   }
 }
 
 void T() {
-  F();
+  U();
   T_linha();
 }
 
 void T_linha() {
   switch( token ) {
-    case '*' : casa( '*' ); F(); printf(" *"); T_linha(); break;
-    case '/' : casa( '/' ); F(); printf(" /"); T_linha(); break;
+    case '*' : casa( '*' ); U(); cout << "*" << ' '; T_linha(); break;
+    case '/' : casa( '/' ); U(); cout << "/" << ' '; T_linha(); break;
+  }
+}
+
+void U(){
+  switch( token ) {
+    case '-' : cout << 0 << ' '; casa('-'); U(); cout <<  "-"  << ' '; break;
+    case '+' : cout << 0 << ' '; casa('+'); U(); cout <<  "+"  << ' '; break;
+    default:   F();
   }
 }
 
 void F() {
   switch( token ) {
-    case ID : {
-      string temp = lexema;
-      casa( ID );
-      cout << lexema.c_str() << endl; } 
-      break;
-    case CTE_INT : {
-      string temp = lexema;
-      casa( CTE_INT );
-      cout << "CTE_INT" << endl;}
-      break;
-    case '(': 
-      casa( '(' ); E(); casa( ')' ); break;
-    default:
-      cout << "Operando esperado, encontrado " << lexema << endl;
+    case ID      : cout << lexema << ' '; casa( ID );      break;
+    case NUM     : cout << lexema << ' '; casa( NUM );     break;
+    case FLOAT   : cout << lexema << ' '; casa ( FLOAT );  break;
+    case STRING  : cout << lexema << ' '; casa (STRING);   break;
+    case '('     : casa( '(' );      E(); casa( ')' );     break;
   }
 }
 
 int main() {
   token = next_token();
-  A();
-  
-  if( token == 0 )
-    cout << "Sintaxe ok!" << endl;
-  else
-    cout << "Caracteres encontrados após o final do programa" << endl;
+  S();
+  cout << '\n';
   
   return 0;
 }
