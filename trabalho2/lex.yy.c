@@ -362,11 +362,11 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[44] =
     {   0,
-        0,    0,   10,    8,    1,    1,    8,    8,    3,    4,
-        4,    0,    0,    6,    0,    0,    0,    0,    0,    3,
-        0,    5,    4,    4,    0,    0,    0,    6,    0,    0,
-        7,    0,    7,    4,    0,    0,    6,    6,    0,    6,
-        4,    2,    0
+        0,    0,   10,    8,    1,    1,    8,    8,    3,    7,
+        7,    0,    0,    5,    0,    0,    0,    0,    0,    3,
+        0,    6,    7,    7,    0,    0,    0,    5,    0,    0,
+        4,    0,    4,    7,    0,    0,    5,    5,    0,    5,
+        7,    2,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -492,11 +492,11 @@ void E_linha();
 void T();
 void T_linha();
 void U();
-void P();
-void RP();
-void FAT();
-void FAT_LINHA();
-void ARGS();
+void POWER();
+void POWER_LINHA();
+void FACTORIAL();
+void FACTORIAL_LINHA();
+void ARGUMENTS();
 void F();
 
 enum { ID = 256, NUM, PRINT, FLOAT, STRING, FUNCTION };
@@ -728,7 +728,7 @@ YY_DECL
 		}
 
 	{
-#line 54 "tradutor.l"
+#line 53 "tradutor.l"
 
 
 #line 735 "lex.yy.c"
@@ -791,51 +791,51 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 56 "tradutor.l"
-{ }
+#line 55 "tradutor.l"
+{                                  }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 57 "tradutor.l"
+#line 56 "tradutor.l"
 { lexema = yytext; return PRINT;   }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 59 "tradutor.l"
+#line 57 "tradutor.l"
 { lexema = yytext; return NUM;     }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 60 "tradutor.l"
-{ lexema = yytext; return ID;      }
+#line 58 "tradutor.l"
+{ lexema = yytext; return FLOAT;   }
 	YY_BREAK
 case 5:
+/* rule 5 can match eol */
+YY_RULE_SETUP
+#line 59 "tradutor.l"
+{ lexema = yytext; return STRING;  }
+	YY_BREAK
+case 6:
 *yy_cp = (yy_hold_char); /* undo effects of setting up yytext */
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 61 "tradutor.l"
+#line 60 "tradutor.l"
 { lexema = yytext; return FUNCTION;}
-	YY_BREAK
-case 6:
-/* rule 6 can match eol */
-YY_RULE_SETUP
-#line 62 "tradutor.l"
-{ lexema = yytext; return STRING;  }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 63 "tradutor.l"
-{ lexema = yytext; return FLOAT;   }
+#line 61 "tradutor.l"
+{ lexema = yytext; return ID;      }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 65 "tradutor.l"
-{ return yytext[0]; }
+#line 62 "tradutor.l"
+{ return yytext[0];                }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 67 "tradutor.l"
+#line 64 "tradutor.l"
 ECHO;
 	YY_BREAK
 #line 842 "lex.yy.c"
@@ -1843,7 +1843,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 67 "tradutor.l"
+#line 64 "tradutor.l"
 
 
 int next_token() {
@@ -1914,31 +1914,31 @@ void U(){
   switch( token ) {
     case '-' : cout << 0 << ' '; casa('-'); U(); cout <<  "-"  << ' '; break;
     case '+' : casa('+'); U(); break;
-    default:   P();
+    default:   POWER();
   }
 }
 
-void P(){
-  FAT();
-  RP();
+void POWER(){
+  FACTORIAL();
+  POWER_LINHA();
 }
 
-void RP(){
-  if(token == '^'){ casa('^'); P(); cout << "power # ";}
+void POWER_LINHA(){
+  if(token == '^'){ casa('^'); POWER(); cout << "power # ";}
 }
 
-void FAT(){
+void FACTORIAL(){
   F();
-  FAT_LINHA();
+  FACTORIAL_LINHA();
 }
 
-void FAT_LINHA(){
-  if (token == '!'){ casa('!'); cout << "fat # "; FAT_LINHA();}
+void FACTORIAL_LINHA(){
+  if (token == '!'){ casa('!'); cout << "fat # "; FACTORIAL_LINHA();}
 }
 
-void ARGS(){
+void ARGUMENTS(){
   E();
-  if (token == ','){ casa(','); ARGS(); }
+  if (token == ','){ casa(','); ARGUMENTS(); }
 }
 
 void F() {
@@ -1948,7 +1948,7 @@ void F() {
     case NUM     : cout << lexema << ' '  ; casa( NUM );    break;
     case FLOAT   : cout << lexema << ' '  ; casa ( FLOAT ); break;
     case STRING  : cout << lexema << ' '  ; casa (STRING);  break;
-    case FUNCTION: casa(FUNCTION);   casa('(');            ARGS();
+    case FUNCTION: casa(FUNCTION);   casa('(');            ARGUMENTS();
                    casa(')');  cout << final_term << " # "; break;
     case '('     : casa( '(' );      E();   casa( ')' );    break;
   }

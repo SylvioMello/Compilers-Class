@@ -9,7 +9,6 @@
 using namespace std;
 
 string lexema;
-
 int token;
 
 void casa( int );
@@ -20,11 +19,11 @@ void E_linha();
 void T();
 void T_linha();
 void U();
-void P();
-void RP();
-void FAT();
-void FAT_LINHA();
-void ARGS();
+void POWER();
+void POWER_LINHA();
+void FACTORIAL();
+void FACTORIAL_LINHA();
+void ARGUMENTS();
 void F();
 
 enum { ID = 256, NUM, PRINT, FLOAT, STRING, FUNCTION };
@@ -41,34 +40,27 @@ map<int,string> nome_tokens = {
 %}
 
 WS	        [ \n\r\t]
-PARENTHESIS "("
-DIGITO	    [0-9]
-LETRA	      [A-Za-z_]
-ESCAPING    ["][^"]*([\\]|["])["][^"]*["]|['][^']*([\\]|['])['][^']*[']
-STRING      (\"([^\"\n]*)\")|{ESCAPING}  
+ID	        {LETRA}({LETRA}|{DIGITO})*  
+NUM	        {DIGITO}+ 
 FLOAT       {NUM}([.]{NUM})?([eE][-+]?{NUM})?
-NUM	        {DIGITO}+
-ID	        {LETRA}({LETRA}|{DIGITO})*   
-
+LETRA	      [A-Za-z_]
+STRING      (\"([^\"\n]*)\")|{ESCAPING}  
+DIGITO	    [0-9]
+ESCAPING    ["][^"]*([\\]|["])["][^"]*["]|['][^']*([\\]|['])['][^']*[']
+PARENTHESIS "("
 
 %%
 
-{WS}          { }
+{WS}               {                                  }
 "print"            { lexema = yytext; return PRINT;   }
-         
 {NUM} 		         { lexema = yytext; return NUM;     }
-{ID}		           { lexema = yytext; return ID;      }
-{ID}/{PARENTHESIS} { lexema = yytext; return FUNCTION;}
-{STRING}           { lexema = yytext; return STRING;  }
 {FLOAT}            { lexema = yytext; return FLOAT;   }
-
-.		               { return yytext[0]; }
+{STRING}           { lexema = yytext; return STRING;  }
+{ID}/{PARENTHESIS} { lexema = yytext; return FUNCTION;}
+{ID}		           { lexema = yytext; return ID;      }
+.		               { return yytext[0];                }
 
 %%
-
-int next_token() {
-  return yylex();
-}
 
 string nome_token( int token ) {
   if( nome_tokens.find( token ) != nome_tokens.end() )
@@ -79,6 +71,10 @@ string nome_token( int token ) {
     r = token;
     return r;
   }
+}
+
+int next_token() {
+  return yylex();
 }
 
 void casa( int esperado ) {
@@ -134,31 +130,31 @@ void U(){
   switch( token ) {
     case '-' : cout << 0 << ' '; casa('-'); U(); cout <<  "-"  << ' '; break;
     case '+' : casa('+'); U(); break;
-    default:   P();
+    default:   POWER();
   }
 }
 
-void P(){
-  FAT();
-  RP();
+void POWER(){
+  FACTORIAL();
+  POWER_LINHA();
 }
 
-void RP(){
-  if(token == '^'){ casa('^'); P(); cout << "power # ";}
+void POWER_LINHA(){
+  if(token == '^'){ casa('^'); POWER(); cout << "power # ";}
 }
 
-void FAT(){
+void FACTORIAL(){
   F();
-  FAT_LINHA();
+  FACTORIAL_LINHA();
 }
 
-void FAT_LINHA(){
-  if (token == '!'){ casa('!'); cout << "fat # "; FAT_LINHA();}
+void FACTORIAL_LINHA(){
+  if (token == '!'){ casa('!'); cout << "fat # "; FACTORIAL_LINHA();}
 }
 
-void ARGS(){
+void ARGUMENTS(){
   E();
-  if (token == ','){ casa(','); ARGS(); }
+  if (token == ','){ casa(','); ARGUMENTS(); }
 }
 
 void F() {
@@ -168,7 +164,7 @@ void F() {
     case NUM     : cout << lexema << ' '  ; casa( NUM );    break;
     case FLOAT   : cout << lexema << ' '  ; casa ( FLOAT ); break;
     case STRING  : cout << lexema << ' '  ; casa (STRING);  break;
-    case FUNCTION: casa(FUNCTION);   casa('(');            ARGS();
+    case FUNCTION: casa(FUNCTION);   casa('(');            ARGUMENTS();
                    casa(')');  cout << final_term << " # "; break;
     case '('     : casa( '(' );      E();   casa( ')' );    break;
   }
@@ -178,6 +174,5 @@ int main() {
   token = next_token();
   S();
   cout << '\n';
-  
   return 0;
 }
