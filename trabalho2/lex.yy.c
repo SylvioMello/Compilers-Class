@@ -481,7 +481,6 @@ char *yytext;
 using namespace std;
 
 string lexema;
-
 int token;
 
 void casa( int );
@@ -510,8 +509,8 @@ map<int,string> nome_tokens = {
   { FUNCTION, "function"}
 };
 
+#line 513 "lex.yy.c"
 #line 514 "lex.yy.c"
-#line 515 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -728,10 +727,10 @@ YY_DECL
 		}
 
 	{
-#line 53 "tradutor.l"
+#line 52 "tradutor.l"
 
 
-#line 735 "lex.yy.c"
+#line 734 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -791,28 +790,28 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 55 "tradutor.l"
+#line 54 "tradutor.l"
 {                                  }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 56 "tradutor.l"
+#line 55 "tradutor.l"
 { lexema = yytext; return PRINT;   }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 57 "tradutor.l"
+#line 56 "tradutor.l"
 { lexema = yytext; return NUM;     }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 58 "tradutor.l"
+#line 57 "tradutor.l"
 { lexema = yytext; return FLOAT;   }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 59 "tradutor.l"
+#line 58 "tradutor.l"
 { lexema = yytext; return STRING;  }
 	YY_BREAK
 case 6:
@@ -820,25 +819,25 @@ case 6:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 60 "tradutor.l"
+#line 59 "tradutor.l"
 { lexema = yytext; return FUNCTION;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 61 "tradutor.l"
+#line 60 "tradutor.l"
 { lexema = yytext; return ID;      }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 62 "tradutor.l"
+#line 61 "tradutor.l"
 { return yytext[0];                }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 64 "tradutor.l"
+#line 63 "tradutor.l"
 ECHO;
 	YY_BREAK
-#line 842 "lex.yy.c"
+#line 841 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1843,12 +1842,8 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 64 "tradutor.l"
+#line 63 "tradutor.l"
 
-
-int next_token() {
-  return yylex();
-}
 
 string nome_token( int token ) {
   if( nome_tokens.find( token ) != nome_tokens.end() )
@@ -1859,6 +1854,10 @@ string nome_token( int token ) {
     r = token;
     return r;
   }
+}
+
+int next_token() {
+  return yylex();
 }
 
 void casa( int esperado ) {
@@ -1958,6 +1957,5 @@ int main() {
   token = next_token();
   S();
   cout << '\n';
-  
   return 0;
 }
