@@ -19,6 +19,10 @@ struct Atributos {
 };
 
 #define YYSTYPE Atributos
+extern "C" FILE *yyin;
+int yylex();
+int yyparse();
+void yyerror(const char *);
 
 enum TipoDecl { DeclVar, DeclConst, DeclLet };
 
@@ -31,10 +35,6 @@ map<string,Var> ts; // Tabela de Símbolos
 
 // Dispara um erro se não pode declarar
 void insere_tabela_de_simbolos( TipoDecl, Atributos );
-
-extern "C" int yylex();
-int yyparse();
-void yyerror(const char *);
 
 vector<string> concatena( vector<string> a, vector<string> b ) {
   a.insert( a.end(), b.begin(), b.end() );
@@ -84,7 +84,7 @@ void print( vector<string> codigo ) {
 
 %}
 
-%token ID IF ELSE LET 
+%token ID IF ELSE LET OBJ ARRAY
 %token CDOUBLE CSTRING CINT
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS
@@ -117,6 +117,14 @@ CMD_IF : IF '(' E ')' CMD ELSE CMD
 LET_ID : ID   
          { $$.c = $1.c + "&"; }
        | ID '=' CDOUBLE
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+       | ID '=' CINT
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+       | ID '=' CSTRING
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+       | ID '=' OBJ
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+       | ID '=' ARRAY
          { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
        ;
 
