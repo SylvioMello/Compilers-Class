@@ -87,13 +87,13 @@ void print( vector<string> codigo ) {
 %token ID IF ELSE LET OBJ ARRAY
 %token CDOUBLE CSTRING CINT
 %token AND OR ME_IG MA_IG DIF IGUAL
-%token MAIS_IGUAL MAIS_MAIS
+%token MAIS_IGUAL MAIS_MAIS PRINT
 
 %nonassoc '<' '>'
 
 %%
 
-S : CMDs { print( resolve_enderecos( $1.c ) ); }
+S : CMDs { print( resolve_enderecos( $1.c  + ".") ); }
   ; 
 
 CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
@@ -117,19 +117,21 @@ CMD_IF : IF '(' E ')' CMD ELSE CMD
 LET_ID : ID   
          { $$.c = $1.c + "&"; }
        | ID '=' CDOUBLE
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
        | ID '=' CINT
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
        | ID '=' CSTRING
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
        | ID '=' OBJ
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
        | ID '=' ARRAY
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
        ;
 
 E : E '<' E
+    { $$.c = $1.c + $3.c + $2.c;}
   | E '>' E
+    { $$.c = $1.c + $3.c + $2.c;}
   | ID
   | CDOUBLE
   | CINT
