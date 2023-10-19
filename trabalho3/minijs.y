@@ -104,17 +104,11 @@ CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
      ;
 
 CMD : DECL_LET ';'
+    | DECL ';'
     | CMD_IF 
     | PRINT E ';' 
       { $$.c = $2.c + "println" + "#"; }
     ;
-
-DECL_LET : LET LET_IDs { $$.c = $2.c; }
-         ;
-         
-LET_IDs : LET_ID ',' LET_IDs { $$.c = $1.c + $3.c; }
-        | LET_ID
-        ;
 
 CMD_IF : IF '(' E ')' CMD ELSE CMD
         {  string lbl_true = gera_label( "lbl_true" );
@@ -131,19 +125,26 @@ CMD_IF : IF '(' E ')' CMD ELSE CMD
          }
        ;
 
-LET_ID : ID   
-         { $$.c = $1.c + "&"; }
-       | ID '=' CDOUBLE
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-       | ID '=' CINT
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-       | ID '=' CSTRING
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-       | ID '=' OBJ
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-       | ID '=' ARRAY
-         { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+DECL_LET : LET LET_IDs { $$.c = $2.c; }
+         ;
+
+LET_IDs : LET_ID ',' LET_IDs { $$.c = $1.c + $3.c; }
+        | LET_ID
+        ;
+
+LET_ID : E {$$.c = $1.c;}
        ;
+
+DECL : EXPRs {$$.c = $1.c;}
+     ;
+
+EXPRs : EXPR ',' EXPRs {$$.c = $1.c + $3.c;}
+      | EXPR '=' EXPRs  {$$.c = $1.c + $3.c;}
+      | EXPR 
+      ;
+EXPR : E {$$.c = $1.c;}
+     | '(' E ')' {$$.c = $2.c;}
+     ;
 
 E : E '<' E
     { $$.c = $1.c + $3.c + $2.c;}
@@ -157,10 +158,19 @@ E : E '<' E
     { $$.c = $1.c + $3.c + "*";}
   | E '/' E
     { $$.c = $1.c + $3.c + "/";}
-  | ID
-  | CDOUBLE
-  | CINT
-  | CSTRING
+  | ID { $$.c = $1.c + "&"; }
+  | ID '=' CDOUBLE
+    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+  | ID '=' CINT
+    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+  | ID '=' CSTRING
+    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+  | ID '=' OBJ
+    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+  | ID '=' ARRAY
+    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+  | ID '=' ID
+    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
   ;
 
 %%
