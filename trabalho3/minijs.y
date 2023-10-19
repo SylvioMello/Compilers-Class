@@ -104,10 +104,10 @@ CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
      ;
 
 CMD : DECL_LET ';'
-    | DECL ';'
     | CMD_IF 
     | PRINT E ';' 
       { $$.c = $2.c + "println" + "#"; }
+    | SIMPLE_DECL ';'
     ;
 
 CMD_IF : IF '(' E ')' CMD ELSE CMD
@@ -125,26 +125,33 @@ CMD_IF : IF '(' E ')' CMD ELSE CMD
          }
        ;
 
-DECL_LET : LET LET_IDs { $$.c = $2.c; }
+DECL_LET : LET VARs { $$.c = $2.c; }
          ;
 
-LET_IDs : LET_ID ',' LET_IDs { $$.c = $1.c + $3.c; }
-        | LET_ID
-        ;
+SIMPLE_DECL : VARs { $$.c = $1.c; }
+            ;
 
-LET_ID : E {$$.c = $1.c;}
-       ;
-
-DECL : EXPRs {$$.c = $1.c;}
+VARs : VAR ',' VARs        { $$.c = $1.c + $3.c; }
+     | VAR '=' VARs        { $$.c = $1.c + $3.c; }
+     | VAR MAIS_IGUAL VARs { $$.c = $1.c + $3.c; }
+     | VAR
+     | E
      ;
 
-EXPRs : EXPR ',' EXPRs {$$.c = $1.c + $3.c;}
-      | EXPR '=' EXPRs  {$$.c = $1.c + $3.c;}
-      | EXPR 
-      ;
-EXPR : E {$$.c = $1.c;}
-     | '(' E ')' {$$.c = $2.c;}
-     ;
+VAR : ID {$$.c = $1.c + "&";}
+    | ID '=' CDOUBLE
+      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+    | ID '=' CINT
+      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+    | ID '=' CSTRING
+      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+    | ID '=' OBJ
+      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+    | ID '=' ARRAY
+      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+    | ID '=' ID
+      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+    ;
 
 E : E '<' E
     { $$.c = $1.c + $3.c + $2.c;}
@@ -158,19 +165,13 @@ E : E '<' E
     { $$.c = $1.c + $3.c + "*";}
   | E '/' E
     { $$.c = $1.c + $3.c + "/";}
-  | ID { $$.c = $1.c + "&"; }
-  | ID '=' CDOUBLE
-    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-  | ID '=' CINT
-    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-  | ID '=' CSTRING
-    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-  | ID '=' OBJ
-    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-  | ID '=' ARRAY
-    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-  | ID '=' ID
-    { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+  | '(' E ')' { $$.c = $2.c; }
+  | ID
+  | CDOUBLE
+  | CINT
+  | CSTRING
+  | OBJ
+  | ARRAY
   ;
 
 %%

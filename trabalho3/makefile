@@ -8,7 +8,7 @@ lex.yy.c: minijs.l
 	lex minijs.l
 
 y.tab.c: minijs.y
-	yacc minijs.y
+	yacc minijs.y -Wcounterexamples
 	
 clean:
 	rm -f lex.yy.c y.tab.c saida
