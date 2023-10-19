@@ -89,6 +89,9 @@ void print( vector<string> codigo ) {
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS PRINT
 
+%right '='
+%left '+' '-'
+%left '*' '/'
 %nonassoc '<' '>'
 
 %%
@@ -100,11 +103,13 @@ CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
      | CMD
      ;
 
-CMD : DECL_LET
+CMD : DECL_LET ';'
     | CMD_IF 
+    | PRINT E ';' 
+      { $$.c = $2.c + "println" + "#"; }
     ;
 
-DECL_LET : LET LET_IDs ';' { $$.c = $2.c; }
+DECL_LET : LET LET_IDs { $$.c = $2.c; }
          ;
          
 LET_IDs : LET_ID ',' LET_IDs { $$.c = $1.c + $3.c; }
@@ -112,6 +117,18 @@ LET_IDs : LET_ID ',' LET_IDs { $$.c = $1.c + $3.c; }
         ;
 
 CMD_IF : IF '(' E ')' CMD ELSE CMD
+        {  string lbl_true = gera_label( "lbl_true" );
+           string lbl_fim_if = gera_label( "lbl_fim_if" );
+           string definicao_lbl_true = ":" + lbl_true;
+           string definicao_lbl_fim_if = ":" + lbl_fim_if;
+                    
+            $$.c = $3.c +                       // Codigo da expressão
+                   lbl_true + "?" +             // Código do IF
+                   $7.c + lbl_fim_if + "#" +    // Código do False
+                   definicao_lbl_true + $5.c +  // Código do True
+                   definicao_lbl_fim_if         // Fim do IF
+                   ;
+         }
        ;
 
 LET_ID : ID   
@@ -132,9 +149,18 @@ E : E '<' E
     { $$.c = $1.c + $3.c + $2.c;}
   | E '>' E
     { $$.c = $1.c + $3.c + $2.c;}
+  | E '+' E
+    { $$.c = $1.c + $3.c + "+";}
+  | E '-' E
+    { $$.c = $1.c + $3.c + "-";}
+  | E '*' E
+    { $$.c = $1.c + $3.c + "*";}
+  | E '/' E
+    { $$.c = $1.c + $3.c + "/";}
   | ID
   | CDOUBLE
   | CINT
+  | CSTRING
   ;
 
 %%

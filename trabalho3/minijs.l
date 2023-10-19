@@ -15,13 +15,6 @@ STRING        (\"([^\"\n]*)\")|{ESCAPING}
 ESCAPING      ["][^"]*([\\]|["])["][^"]*["]|['][^']*([\\]|['])['][^']*[']
 ID            ({DOLAR})({LETRA}|{UNDERLINE})({LETRA}|{DIGITO}|{UNDERLINE})*|({LETRA}|{UNDERLINE})({LETRA}|{DIGITO}|{UNDERLINE})*|({DOLAR})
 DOUBLE         [-+]?{DIGITO}*\.?{DIGITO}+([eE][-+]?{DIGITO}+)?
-ERRO          ({LETRA}|{UNDERLINE}|{DOLAR}|{DIGITO})({UNDERLINE}|{LETRA}|{DOLAR}|{DIGITO})*
-CRASE         [`][^`{}]*[`]
-START         [`][^`{}]*{DOLAR}
-EXPR          [{].*
-END           [}][^`{}]*[`]
-COMENTARIO1   \/\*\s*([^*]*\*[^\/]*)\\*\/
-COMENTARIO2   [/][/].*
 
 %%
 
@@ -42,6 +35,7 @@ COMENTARIO2   [/][/].*
 "let"      { return token( LET ); }
 "if"       { return token( IF ); }
 "else"     { return token( ELSE ); }
+"print"    { return token( PRINT ); }
 {INT}      { return token( CINT ); } 
 {DOUBLE}   { return token( CDOUBLE ); }
 {STRING}   { return token( CSTRING );}
