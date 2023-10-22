@@ -90,9 +90,11 @@ void print( vector<string> codigo ) {
 %token MAIS_IGUAL MAIS_MAIS PRINT
 
 %right '='
+%left AND OR
+%left MA_IG ME_IG IGUAL DIF
 %left '+' '-'
 %left '*' '/'
-%nonassoc '<' '>'
+%nonassoc '<' '>' IF ELSE
 
 %%
 
@@ -103,11 +105,11 @@ CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
      | CMD
      ;
 
-CMD : DECL_LET ';'
-    | CMD_IF 
+CMD : A ';'  { $$.c = $1.c; }
+    | CMD_LET ';'
+    | CMD_IF
     | PRINT E ';' 
       { $$.c = $2.c + "println" + "#"; }
-    | SIMPLE_DECL ';'
     ;
 
 CMD_IF : IF '(' E ')' CMD ELSE CMD
@@ -125,53 +127,58 @@ CMD_IF : IF '(' E ')' CMD ELSE CMD
          }
        ;
 
-DECL_LET : LET VARs { $$.c = $2.c; }
-         ;
-
-SIMPLE_DECL : VARs { $$.c = $1.c; }
-            ;
+CMD_LET : LET VARs { $$.c = $2.c; }
+        ;
 
 VARs : VAR ',' VARs        { $$.c = $1.c + $3.c; }
-     | VAR '=' VARs        { $$.c = $1.c + $3.c; }
-     | VAR MAIS_IGUAL VARs { $$.c = $1.c + $3.c; }
-     | VAR
-     | E
+     | VAR              
      ;
 
-VAR : ID {$$.c = $1.c + "&";}
-    | ID '=' CDOUBLE
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-    | ID '=' CINT
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-    | ID '=' CSTRING
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-    | ID '=' OBJ
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-    | ID '=' ARRAY
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
-    | ID '=' ID
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";}
+VAR : LVALUE '=' R { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+    | LVALUE       { $$.c = $1.c + "&"; }
     ;
 
-E : E '<' E
-    { $$.c = $1.c + $3.c + $2.c;}
-  | E '>' E
-    { $$.c = $1.c + $3.c + $2.c;}
-  | E '+' E
-    { $$.c = $1.c + $3.c + "+";}
-  | E '-' E
-    { $$.c = $1.c + $3.c + "-";}
-  | E '*' E
-    { $$.c = $1.c + $3.c + "*";}
-  | E '/' E
-    { $$.c = $1.c + $3.c + "/";}
-  | '(' E ')' { $$.c = $2.c; }
-  | ID
-  | CDOUBLE
-  | CINT
-  | CSTRING
-  | OBJ
-  | ARRAY
+A : LVALUE '=' A                   { $$.c = $1.c + $3.c + "="; }
+  | LVALUE MAIS_IGUAL A            { $$.c = $1.c + $3.c + "+="; }
+  | LVALUEPROP '=' A               { $$.c = $1.c + $3.c + "[=]"; }
+  | R                              
+  ;
+
+R : E ME_IG E        { $$.c = $1.c + $3.c + "<="; }
+  | E MA_IG E        { $$.c = $1.c + $3.c + ">="; }
+  |	E '<' E       { $$.c = $1.c + $3.c + "<"; }
+  | E '>' E       { $$.c = $1.c + $3.c + ">"; }
+  | E IGUAL E       { $$.c = $1.c + $3.c + "=="; }
+  | E DIF E        { $$.c = $1.c + $3.c + "!="; }
+  | E                  
+  ;
+
+E : LVALUE '=' E       { $$.c = $1.c + $3.c + "=" ; }
+  | LVALUEPROP '=' E   { $$.c = $1.c + $3.c + "[=]"; }
+  | E '+' E        { $$.c = $1.c + $3.c + "+"; }
+  | E '-' E       { $$.c = $1.c + $3.c + "-"; }
+  | E '*' E        { $$.c = $1.c + $3.c + "*"; }
+  | E '/' E         { $$.c = $1.c + $3.c + "/"; }
+  | '-' E         { $$.c = "0" + $2.c + "-"; }
+  | LVALUE             { $$.c = $1.c + "@"; }
+  | LVALUEPROP         { $$.c = $1.c + "[@]"; }
+  | F                  
+  ;
+
+LVALUE : ID
+	   ;
+	   
+LVALUEPROP : E '[' E ']'    { $$.c = $1.c + $3.c; }
+		   | E '.' ID    { $$.c = $1.c + $3.c; }
+		   ;
+
+F : ID          { $$.c = $1.c + "@"; }
+  | CINT         { $$.c = $1.c; }
+  | CDOUBLE         { $$.c = $1.c; }
+  | CSTRING         { $$.c = $1.c; }
+  | '(' E ')'      { $$ = $2; }
+  | OBJ      { $$.c = $1.c; }
+  | ARRAY       { $$.c = $1.c; }
   ;
 
 %%
