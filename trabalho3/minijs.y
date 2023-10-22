@@ -110,7 +110,12 @@ CMD : A ';'  { $$.c = $1.c + "^";}
     | CMD_IF
     | PRINT E ';' 
       { $$.c = $2.c + "println" + "#"; }
+    | '{' CMD_LIST '}' { $$.c = $2.c; }
     ;
+
+CMD_LIST : CMD
+         | CMD_LIST CMD     { $$.c = $1.c + $2.c; }
+	 ;
 
 CMD_IF : IF '(' R ')' CMD 
       {   string lbl_fim_if = gera_label( "lbl_fim_if" );
