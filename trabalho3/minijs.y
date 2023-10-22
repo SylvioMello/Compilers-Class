@@ -148,9 +148,10 @@ VAR : LVALUE '=' R { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     | LVALUE       { $$.c = $1.c + "&";                           }
     ;
 
-A : LVALUE '=' A        { $$.c = $1.c + $3.c + "=";       }
-  | LVALUE MAIS_IGUAL A { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
-  | LVALUEPROP '=' A    { $$.c = $1.c + $3.c + "[=]";     }
+A : LVALUE '=' A            { $$.c = $1.c + $3.c + "=";       }
+  | LVALUE MAIS_IGUAL A     { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
+  | LVALUEPROP '=' A        { $$.c = $1.c + $3.c + "[=]";     }
+  | LVALUEPROP MAIS_IGUAL A { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "[=]"; }
   | R                              
   ;
 
