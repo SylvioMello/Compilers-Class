@@ -112,7 +112,12 @@ CMD : A ';'  { $$.c = $1.c + "^";}
       { $$.c = $2.c + "println" + "#"; }
     ;
 
-CMD_IF : IF '(' R ')' CMD ELSE CMD
+CMD_IF : IF '(' R ')' CMD 
+      {   string lbl_fim_if = gera_label( "lbl_fim_if" );
+          $$.c = $3.c + "!" + lbl_fim_if + "?" + 
+                 $5.c + (":" + lbl_fim_if); 
+        }
+        | IF '(' R ')' CMD ELSE CMD
         {  string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
@@ -147,7 +152,7 @@ A : LVALUE '=' A        { $$.c = $1.c + $3.c + "=";       }
 R : E ME_IG E   { $$.c = $1.c + $3.c + "<="; }
   | E MA_IG E   { $$.c = $1.c + $3.c + ">="; }
   |	E '<' E     { $$.c = $1.c + $3.c + "<";  }
-  | E '>' E     { $$.c = $1.c + $3.c + ">";  }
+  | E '>' E     { $$.c = $1.c + $3.c + ">";  }  
   | E IGUAL E   { $$.c = $1.c + $3.c + "=="; }
   | E DIF E     { $$.c = $1.c + $3.c + "!="; }
   | E                  
@@ -155,7 +160,7 @@ R : E ME_IG E   { $$.c = $1.c + $3.c + "<="; }
 
 E : LVALUE '=' E     { $$.c = $1.c + $3.c + "=";   }
   | LVALUEPROP '=' E { $$.c = $1.c + $3.c + "[=]"; }
-  | E MAIS_MAIS      { $$.c = $1.c + $1.c + "1" + "+" + "="; }
+  | LVALUE MAIS_MAIS { $$.c = $1.c + $1.c + "@" + "1" + "+" + "="; }
   | E '+' E          { $$.c = $1.c + $3.c + "+";   }
   | E '-' E          { $$.c = $1.c + $3.c + "-";   }
   | E '*' E          { $$.c = $1.c + $3.c + "*";   }
