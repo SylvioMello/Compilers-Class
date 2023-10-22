@@ -11,7 +11,7 @@ LETRA         [A-Za-z]
 INT           {DIGITO}+
 UNDERLINE      "_"
 DOLAR          "$"
-STRING        (\"([^\"\n]*)\")|(\'([^\'\n]*)\') 
+STRING        (\"([^\"\n]|(\\\")|\"\")+\")|(\'([^\'\n]|(\\\')|\'\')+\')
 ID            ({DOLAR})({LETRA}|{UNDERLINE})({LETRA}|{DIGITO}|{UNDERLINE})*|({LETRA}|{UNDERLINE})({LETRA}|{DIGITO}|{UNDERLINE})*|({DOLAR})
 DOUBLE        [-+]?{DIGITO}*\.?{DIGITO}+([eE][-+]?{DIGITO}+)?
 

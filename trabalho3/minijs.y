@@ -89,7 +89,7 @@ void print( vector<string> codigo ) {
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS PRINT
 
-%right '='
+%right '=' MAIS_IGUAL
 %left AND OR
 %left MA_IG ME_IG IGUAL DIF
 %left '+' '-'
@@ -105,7 +105,7 @@ CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
      | CMD
      ;
 
-CMD : A ';'  { $$.c = $1.c; }
+CMD : A ';'  { $$.c = $1.c + "^";}
     | CMD_LET ';'
     | CMD_IF
     | PRINT E ';' 
@@ -139,22 +139,23 @@ VAR : LVALUE '=' R { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     ;
 
 A : LVALUE '=' A        { $$.c = $1.c + $3.c + "=";       }
-  | LVALUE MAIS_IGUAL A { $$.c = $1.c + $3.c + "+" + "="; }
+  | LVALUE MAIS_IGUAL A { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
   | LVALUEPROP '=' A    { $$.c = $1.c + $3.c + "[=]";     }
   | R                              
   ;
 
-R : E ME_IG E { $$.c = $1.c + $3.c + "<="; }
-  | E MA_IG E { $$.c = $1.c + $3.c + ">="; }
-  |	E '<' E   { $$.c = $1.c + $3.c + "<";  }
-  | E '>' E   { $$.c = $1.c + $3.c + ">";  }
-  | E IGUAL E { $$.c = $1.c + $3.c + "=="; }
-  | E DIF E   { $$.c = $1.c + $3.c + "!="; }
+R : E ME_IG E   { $$.c = $1.c + $3.c + "<="; }
+  | E MA_IG E   { $$.c = $1.c + $3.c + ">="; }
+  |	E '<' E     { $$.c = $1.c + $3.c + "<";  }
+  | E '>' E     { $$.c = $1.c + $3.c + ">";  }
+  | E IGUAL E   { $$.c = $1.c + $3.c + "=="; }
+  | E DIF E     { $$.c = $1.c + $3.c + "!="; }
   | E                  
   ;
 
 E : LVALUE '=' E     { $$.c = $1.c + $3.c + "=";   }
   | LVALUEPROP '=' E { $$.c = $1.c + $3.c + "[=]"; }
+  | E MAIS_MAIS      { $$.c = $1.c + $1.c + "1" + "+" + "="; }
   | E '+' E          { $$.c = $1.c + $3.c + "+";   }
   | E '-' E          { $$.c = $1.c + $3.c + "-";   }
   | E '*' E          { $$.c = $1.c + $3.c + "*";   }
