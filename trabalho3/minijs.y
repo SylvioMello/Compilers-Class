@@ -18,9 +18,10 @@ struct Atributos {
   }
 };
 
+
 #define YYSTYPE Atributos
 extern "C" FILE *yyin;
-int yylex();
+extern "C" int yylex();
 int yyparse();
 void yyerror(const char *);
 
@@ -116,6 +117,7 @@ CMD : CMD_LET ';'
     | '{' CMD_LIST '}' { $$.c = $2.c; }
     | E ';'
       {$$.c = $1.c + "^";}
+    | ';' {$$.clear();}
     ;
 
 CMD_LIST : CMD
@@ -166,61 +168,72 @@ CMD_IF : IF '(' E ')' CMD
 CMD_LET : LET VARs { $$.c = $2.c; }
         ;
 
-VARs : VAR ',' VARs { $$.c = $1.c + $3.c; }
+VARs : VAR ',' VARs { $$.c = $1.c + $3.c; } 
      | VAR
      ;
 
-VAR : ID
-      { $$.c = $1.c + "&"; }
-    | ID '=' E
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+VAR : ID                { $$.c = $1.c + "&"; }
+    | ID '=' E          { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     ;
-
-LVALUE : ID 
-       ;
-       
-LVALUEPROP : E '[' E ']'
-           | E '.' ID
-           ;
-
+     
 E : LVALUE '=' E 
     { $$.c = $1.c + $3.c + "="; }
+  | LVALUE '=' '{' '}'        
+    { $$.c = $1.c + vector<string>{"{}"} + "="; } 
+  | LVALUE MAIS_MAIS 
+    { $$.c = $1.c + $1.c + "@" + "1" + "+" + "="; }
+  | LVALUE MAIS_IGUAL E     
+    { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
   | LVALUEPROP '=' E 	
     { $$.c = $1.c + $3.c + "[=]"; }
-  | LVALUE MAIS_IGUAL E     
-    { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
+  | LVALUEPROP '=' '{' '}'    
+    { $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
     { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "[=]"; }
-  | LVALUE MAIS_MAIS { $$.c = $1.c + $1.c + "@" + "1" + "+" + "="; }
-  | E ME_IG E   { $$.c = $1.c + $3.c + "<="; }
-  | E MA_IG E   { $$.c = $1.c + $3.c + ">="; }
-  | E IGUAL E   { $$.c = $1.c + $3.c + "=="; }
-  | E DIF E     { $$.c = $1.c + $3.c + "!="; }
+  | E ME_IG E   
+    { $$.c = $1.c + $3.c + "<="; }
+  | E MA_IG E   
+    { $$.c = $1.c + $3.c + ">="; }
+  | E IGUAL E   
+    { $$.c = $1.c + $3.c + "=="; }
+  | E DIF E     
+    { $$.c = $1.c + $3.c + "!="; }
   | E '<' E
-    { $$.c = $1.c + $3.c + $2.c; }
+    { $$.c = $1.c + $3.c + "<"; }
   | E '>' E
-    { $$.c = $1.c + $3.c + $2.c; }
+    { $$.c = $1.c + $3.c + ">"; }
   | E '+' E
-    { $$.c = $1.c + $3.c + $2.c; }
+    { $$.c = $1.c + $3.c + "+"; }
   | E '-' E
-    { $$.c = $1.c + $3.c + $2.c; }
+    { $$.c = $1.c + $3.c + "-"; }
   | E '*' E
-    { $$.c = $1.c + $3.c + $2.c; }
+    { $$.c = $1.c + $3.c + "*"; }
   | E '/' E
-    { $$.c = $1.c + $3.c + $2.c; }
+    { $$.c = $1.c + $3.c + "/"; }
   | E '%' E
-    { $$.c = $1.c + $3.c + $2.c; }
+    { $$.c = $1.c + $3.c + "%"; }
+  | '-' E 
+    {$$.c = "0" + $2.c + $1.c;}
   | CDOUBLE
   | CINT
-  | OBJ
-  | ARRAY
+  | OBJ 
+  | ARRAY 
   | CSTRING
   | LVALUE 
     { $$.c = $1.c + "@"; } 
   | LVALUEPROP
     { $$.c = $1.c + "[@]"; }
-  | '(' E ')' { $$.c = $2.c; }
+  | '(' E ')' 
+    { $$.c = $2.c; }
   ;
+
+LVALUE : ID 
+       ;
+       
+LVALUEPROP : E '[' E ']' { $$.c = $1.c + $3.c;}
+           | E '.' ID    { $$.c = $1.c + $3.c;}
+           ;
+
 
 %%
 

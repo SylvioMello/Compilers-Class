@@ -8,7 +8,7 @@ codigo: saida entrada.txt
 	cat codigo
 
 saida: lex.yy.c y.tab.c
-	g++ -std=c++17 y.tab.c -o saida -ll
+	g++ y.tab.c -o saida -lfl
 
 lex.yy.c: minijs.l
 	lex minijs.l

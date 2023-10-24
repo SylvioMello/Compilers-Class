@@ -1,1 +1,1 @@
-obj & obj {} = ^ i & i -2 = ^ obj @ "Manoel" [=] ^ obj @ [] [=] ^ obj @ [@] 12 [=] ^ obj @ [@] 12 [=] ^ obj @ [@] obj @ [@] @ 1 + [=] ^ obj @ [@] 45 [=] ^ obj @ obj @ [@] "!" + [=] ^ . 
+a & a {} = ^ campo & campo "c" = ^ i & i 0 = ^ i @ 6 < 26 ? 48 # a @ campo campo @ i @ + = i @ [=] ^ i i @ 2 + = ^ 18 # . 
