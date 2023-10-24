@@ -10,7 +10,9 @@ int linha = 1, coluna = 1;
 
 struct Atributos {
   vector<string> c; // Código
+
   int linha = 0, coluna = 0;
+
   void clear() {
     c.clear();
     linha = 0;
@@ -18,24 +20,11 @@ struct Atributos {
   }
 };
 
-
 #define YYSTYPE Atributos
-extern "C" FILE *yyin;
+
 extern "C" int yylex();
 int yyparse();
 void yyerror(const char *);
-
-enum TipoDecl { DeclVar, DeclConst, DeclLet };
-
-struct Var {
-  int linha, coluna;
-  TipoDecl tipo;
-};
-
-map<string,Var> ts; // Tabela de Símbolos
-
-// Dispara um erro se não pode declarar
-void insere_tabela_de_simbolos( TipoDecl, Atributos );
 
 vector<string> concatena( vector<string> a, vector<string> b ) {
   a.insert( a.end(), b.begin(), b.end() );
@@ -85,18 +74,17 @@ void print( vector<string> codigo ) {
 
 %}
 
-%token ID IF ELSE LET OBJ ARRAY FOR
+%token ID IF ELSE LET OBJ ARRAY FOR WHILE
 %token CDOUBLE CSTRING CINT
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS PRINT
 
-%right '=' MAIS_IGUAL
-%left AND OR
-%left MA_IG ME_IG IGUAL DIF
+%right '='
+%nonassoc IGUAL MAIS_IGUAL MAIS_MAIS MA_IG ME_IG DIF
 %nonassoc '<' '>' IF ELSE
+%left AND OR
 %left '+' '-'
 %left '*' '/' '%'
-
 %left '['
 %left '.'
 
@@ -106,23 +94,22 @@ S : CMDs { print( resolve_enderecos( $1.c  + ".") ); }
   ;
 
 CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
-     | CMD
+     | {$$.clear();}
      ;
 
 CMD : CMD_LET ';'
     | CMD_FOR
     | CMD_IF
+    | CMD_WHILE
     | PRINT E ';'
       { $$.c = $2.c + "println" + "#"; }
-    | '{' CMD_LIST '}' { $$.c = $2.c; }
+    | '{' CMDs '}' 
+      { $$.c = $2.c; }
     | E ';'
       {$$.c = $1.c + "^";}
-    | ';' {$$.clear();}
+    | ';' 
+      {$$.clear();}
     ;
-
-CMD_LIST : CMD
-         | CMD_LIST CMD     { $$.c = $1.c + $2.c; }
-	 ;
 
 CMD_FOR : FOR '(' PRIM_E ';' E ';' E ')' CMD
         { string lbl_fim_for = gera_label( "fim_for" );
@@ -165,15 +152,34 @@ CMD_IF : IF '(' E ')' CMD
          }
        ;
 
-CMD_LET : LET VARs { $$.c = $2.c; }
+CMD_WHILE : WHILE '(' E ')' CMD {
+            string lbl_fim_while = gera_label("lbl_fim_while");
+            string lbl_condicao = gera_label("lbl_condicao");
+            string definicao_lbl_fim_while = ":" + lbl_fim_while;
+            string definicao_lbl_condicao = ":" + lbl_condicao;
+            $$.c = lbl_condicao + $3.c +
+                 "!" + lbl_fim_while 
+                  + "?" + definicao_lbl_condicao 
+                  + "#" + $5.c +
+                  definicao_lbl_fim_while;
+            }
+          ;
+
+CMD_LET : LET VARs 
+          { $$.c = $2.c; }
         ;
 
-VARs : VAR ',' VARs { $$.c = $1.c + $3.c; } 
+VARs : VAR ',' VARs 
+       { $$.c = $1.c + $3.c; } 
      | VAR
      ;
 
-VAR : ID                { $$.c = $1.c + "&"; }
-    | ID '=' E          { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+VAR : ID                
+      { $$.c = $1.c + "&"; }
+    | ID '=' E          
+      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+    | ID '=' '{' '}'    
+      { $$.c = $1.c + "&" +  $1.c +  vector<string>{"{}"} + "=" + "^";} 
     ;
      
 E : LVALUE '=' E 
@@ -181,7 +187,7 @@ E : LVALUE '=' E
   | LVALUE '=' '{' '}'        
     { $$.c = $1.c + vector<string>{"{}"} + "="; } 
   | LVALUE MAIS_MAIS 
-    { $$.c = $1.c + $1.c + "@" + "1" + "+" + "="; }
+    { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | LVALUE MAIS_IGUAL E     
     { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
   | LVALUEPROP '=' E 	
@@ -189,7 +195,7 @@ E : LVALUE '=' E
   | LVALUEPROP '=' '{' '}'    
     { $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
-    { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "[=]"; }
+    { $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
   | E ME_IG E   
     { $$.c = $1.c + $3.c + "<="; }
   | E MA_IG E   

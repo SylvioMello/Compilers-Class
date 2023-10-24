@@ -6,11 +6,13 @@
 
 using namespace std;
 
-int linha = 1, coluna = 1;
+int linha = 1, coluna = 1; 
 
 struct Atributos {
   vector<string> c; // Código
+
   int linha = 0, coluna = 0;
+
   void clear() {
     c.clear();
     linha = 0;
@@ -19,22 +21,10 @@ struct Atributos {
 };
 
 #define YYSTYPE Atributos
-extern "C" FILE *yyin;
-int yylex();
+
+extern "C" int yylex();
 int yyparse();
 void yyerror(const char *);
-
-enum TipoDecl { DeclVar, DeclConst, DeclLet };
-
-struct Var {
-  int linha, coluna;
-  TipoDecl tipo;
-};
-
-map<string,Var> ts; // Tabela de Símbolos
-
-// Dispara um erro se não pode declarar
-void insere_tabela_de_simbolos( TipoDecl, Atributos );
 
 vector<string> concatena( vector<string> a, vector<string> b ) {
   a.insert( a.end(), b.begin(), b.end() );
@@ -57,16 +47,16 @@ vector<string> operator+( string a, vector<string> b ) {
 vector<string> resolve_enderecos( vector<string> entrada ) {
   map<string,int> label;
   vector<string> saida;
-  for( int i = 0; i < entrada.size(); i++ )
-    if( entrada[i][0] == ':' )
+  for( int i = 0; i < entrada.size(); i++ ) 
+    if( entrada[i][0] == ':' ) 
         label[entrada[i].substr(1)] = saida.size();
     else
       saida.push_back( entrada[i] );
-
-  for( int i = 0; i < saida.size(); i++ )
+  
+  for( int i = 0; i < saida.size(); i++ ) 
     if( label.count( saida[i] ) > 0 )
         saida[i] = to_string(label[saida[i]]);
-
+    
   return saida;
 }
 
@@ -78,176 +68,186 @@ string gera_label( string prefixo ) {
 void print( vector<string> codigo ) {
   for( string s : codigo )
     cout << s << " ";
+    
+  cout << endl;  
+}
 
-  cout << endl;
+void cmd_if_else(Atributos& ss, Atributos& s_cond, Atributos& s_false, Atributos& s_true){
+    string lbl_true = gera_label( "lbl_true" );
+    string lbl_fim_if = gera_label( "lbl_fim_if" );
+    string definicao_lbl_true = ":" + lbl_true;
+    string definicao_lbl_fim_if = ":" + lbl_fim_if;
+    ss.c = s_cond.c +                          // Codigo da expressão
+    lbl_true + "?" +                   // Código do IF
+    s_false.c + lbl_fim_if + "#" +    // Código do False
+    definicao_lbl_true + s_true.c +  // Código do True
+    definicao_lbl_fim_if;           // Fim do IF
+    
+}
+
+void cmd_if_no_else(Atributos& ss, Atributos& s_cond, Atributos& s_true){
+
+    string lbl_true = gera_label( "lbl_true" );
+    string lbl_fim_if = gera_label( "lbl_fim_if" );
+    string definicao_lbl_true = ":" + lbl_true;
+    string definicao_lbl_fim_if = ":" + lbl_fim_if;
+    ss.c = s_cond.c +                          // Codigo da expressão
+    lbl_true + "?" +                   // Código do IF
+    lbl_fim_if + "#" +    // Código do False
+    definicao_lbl_true + s_true.c +  // Código do True
+    definicao_lbl_fim_if;           // Fim do IF
+
+}
+
+
+void cmd_while (Atributos& ss,  Atributos& s_cond, Atributos& s_cmd){
+
+    string lbl_fim_while = gera_label( "fim_while" );
+    string lbl_condicao_while = gera_label( "condicao_while" );
+    string lbl_comando_while = gera_label( "comando_while" );
+    string definicao_lbl_fim_while = ":" + lbl_fim_while;
+    string definicao_lbl_condicao_while = ":" + lbl_condicao_while;
+    string definicao_lbl_comando_while = ":" + lbl_comando_while;
+    
+    ss.c =  definicao_lbl_condicao_while +
+            s_cond.c + lbl_comando_while + "?" + lbl_fim_while + "#" +
+            definicao_lbl_comando_while + s_cmd.c + 
+            + lbl_condicao_while + "#" +
+            definicao_lbl_fim_while;
+}
+
+void cmd_for(Atributos& ss, Atributos& s_dec, Atributos& s_cond, Atributos& s_cmd, Atributos& s_it){
+
+    string lbl_fim_for = gera_label( "fim_for" );
+    string lbl_condicao_for = gera_label( "condicao_for" );
+    string lbl_comando_for = gera_label( "comando_for" );
+    string definicao_lbl_fim_for = ":" + lbl_fim_for;
+    string definicao_lbl_condicao_for = ":" + lbl_condicao_for;
+    string definicao_lbl_comando_for = ":" + lbl_comando_for;
+    
+   ss.c = s_dec.c + definicao_lbl_condicao_for +
+                 s_cond.c + lbl_comando_for + "?" + lbl_fim_for + "#" +
+                 definicao_lbl_comando_for + s_cmd.c + 
+                 s_it.c + "^" + lbl_condicao_for + "#" +
+                 definicao_lbl_fim_for;
 }
 
 %}
 
-%token ID IF ELSE LET OBJ ARRAY FOR
+%token ID IF ELSE LET PRINT FOR WHILE
 %token CDOUBLE CSTRING CINT
 %token AND OR ME_IG MA_IG DIF IGUAL
-%token MAIS_IGUAL MAIS_MAIS PRINT
+%token MAIS_IGUAL MAIS_MAIS
 
-%right '=' MAIS_IGUAL
-%left AND OR
-%left MA_IG ME_IG IGUAL DIF
-%nonassoc '<' '>' IF ELSE
+%right '='
+%nonassoc IGUAL MAIS_IGUAL  MAIS_MAIS
+%nonassoc '<' '>'
 %left '+' '-'
 %left '*' '/' '%'
-
 %left '['
 %left '.'
 
+
 %%
 
-S : CMDs { print( resolve_enderecos( $1.c  + ".") ); }
+S : CMDs { print( resolve_enderecos( $1.c + "." ) ); }
   ;
 
-CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
-     | CMD
+CMDs : CMDs CMD  { $$.c = $1.c + $2.c; };
+     | {$$.clear();}
      ;
-
+     
 CMD : CMD_LET ';'
-    | CMD_FOR
     | CMD_IF
-    | PRINT E ';'
+    | CMD_WHILE
+    | CMD_FOR
+    | PRINT E ';' 
       { $$.c = $2.c + "println" + "#"; }
-    | '{' CMD_LIST '}' { $$.c = $2.c; }
-    | E ';'
-      {$$.c = $1.c + "^";}
+    | E ';'   { $$.c = $1.c + "^"; }
+    | '{' CMDs '}' {$$.c = $2.c;}
+    | ';' {$$.clear();}
     ;
-
-CMD_LIST : CMD
-         | CMD_LIST CMD     { $$.c = $1.c + $2.c; }
-	 ;
-
-CMD_FOR : FOR '(' PRIM_E ';' E ';' E ')' CMD
-        { string lbl_fim_for = gera_label( "fim_for" );
-          string lbl_condicao_for = gera_label( "condicao_for" );
-          string lbl_comando_for = gera_label( "comando_for" );
-          string definicao_lbl_fim_for = ":" + lbl_fim_for;
-          string definicao_lbl_condicao_for = ":" + lbl_condicao_for;
-          string definicao_lbl_comando_for = ":" + lbl_comando_for;
-
-          $$.c = $3.c + definicao_lbl_condicao_for +
-                 $5.c + lbl_comando_for + "?" + lbl_fim_for + "#" +
-                 definicao_lbl_comando_for + $9.c +
-                 $7.c + "^" + lbl_condicao_for + "#" +
-                 definicao_lbl_fim_for;
-        }
+ 
+CMD_FOR : FOR '(' PRIM_E ';' E ';' E ')' CMD  { cmd_for($$, $3, $5, $9, $7); }
         ;
 
-PRIM_E : CMD_LET
-       | E
-         { $$.c = $1.c + "^"; }
-       ;
-
-CMD_IF : IF '(' E ')' CMD
-        {   string lbl_fim_if = gera_label( "lbl_fim_if" );
-          $$.c = $3.c + "!" + lbl_fim_if + "?" +
-                 $5.c + (":" + lbl_fim_if);
-        }
-        | IF '(' E ')' CMD ELSE CMD
-        {  string lbl_true = gera_label( "lbl_true" );
-           string lbl_fim_if = gera_label( "lbl_fim_if" );
-           string definicao_lbl_true = ":" + lbl_true;
-           string definicao_lbl_fim_if = ":" + lbl_fim_if;
-
-            $$.c = $3.c +                       // Codigo da expressão
-                   lbl_true + "?" +             // Código do IF
-                   $7.c + lbl_fim_if + "#" +    // Código do False
-                   definicao_lbl_true + $5.c +  // Código do True
-                   definicao_lbl_fim_if         // Fim do IF
-                   ;
-         }
+PRIM_E : CMD_LET 
+       | E  { $$.c = $1.c + "^"; }
        ;
 
 CMD_LET : LET VARs { $$.c = $2.c; }
         ;
 
-VARs : VAR ',' VARs { $$.c = $1.c + $3.c; }
+VARs : VAR ',' VARs { $$.c = $1.c + $3.c; } 
      | VAR
      ;
 
-VAR : ID
-      { $$.c = $1.c + "&"; }
-    | ID '=' E
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+VAR : ID                { $$.c = $1.c + "&"; }
+    | ID '=' E          { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+    | ID '=' '{' '}'    { $$.c = $1.c + "&" +  $1.c +  vector<string>{"{}"} + "=" + "^";} 
     ;
+     
+CMD_IF : IF '(' E ')' CMD           { cmd_if_no_else($$, $3, $5); }
+       | IF '(' E ')' CMD ELSE CMD  { cmd_if_else($$, $3, $7, $5); }
+       ;
+      
+CMD_WHILE : WHILE '(' E ')' CMD   {  cmd_while($$, $3, $5);  }
+          ;
 
-E : LVALUE '=' E 
-    { $$.c = $1.c + $3.c + "="; }
-  | LVALUE '=' '{' '}'        
-    { $$.c = $1.c + vector<string>{"{}"} + "="; } 
-  | LVALUE MAIS_MAIS 
-    { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + vector<string>{"1"} + vector<string>{"+"} + vector<string>{"="} + "^"; }
-  | LVALUE MAIS_IGUAL E     
-    { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
-  | LVALUEPROP '=' E 	
-    { $$.c = $1.c + $3.c + "[=]"; }
-  | LVALUEPROP '=' '{' '}'    
-    { $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
-  | LVALUEPROP MAIS_IGUAL E
-    { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "[=]"; }
-  | E ME_IG E   
-    { $$.c = $1.c + $3.c + "<="; }
-  | E MA_IG E   
-    { $$.c = $1.c + $3.c + ">="; }
-  | E IGUAL E   
-    { $$.c = $1.c + $3.c + "=="; }
-  | E DIF E     
-    { $$.c = $1.c + $3.c + "!="; }
-  | E '<' E
-    { $$.c = $1.c + $3.c + "<"; }
-  | E '>' E
-    { $$.c = $1.c + $3.c + ">"; }
-  | E '+' E
-    { $$.c = $1.c + $3.c + "+"; }
-  | E '-' E
-    { $$.c = $1.c + $3.c + "-"; }
-  | E '*' E
-    { $$.c = $1.c + $3.c + "*"; }
-  | E '/' E
-    { $$.c = $1.c + $3.c + "/"; }
-  | E '%' E
-    { $$.c = $1.c + $3.c + "%"; }
-  | '-' E 
-    {$$.c = "0" + $2.c + $1.c;}
-  | CDOUBLE
+E : LVALUE '=' E              { $$.c = $1.c + $3.c + "="; }
+  | LVALUE '=' '{' '}'        { $$.c = $1.c + vector<string>{"{}"} + "="; } 
+  | LVALUEPROP '=' E          { $$.c = $1.c + $3.c + "[=]"; }
+  | LVALUEPROP '=' '{' '}'    { $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
+  | LVALUE MAIS_IGUAL E       { $$.c = $1.c + $1.c +  "@" + $3.c +  "+" + "=";}
+  | LVALUEPROP MAIS_IGUAL E   { $$.c = $1.c + $1.c +  "[@]" + $3.c +  "+" + "[=]";}
+  | LVALUE MAIS_MAIS          { 
+                                 $$.c = $1.c + "@" +  $1.c + $1.c + "@" + vector<string>{"1"} + vector<string>{"+"} + vector<string>{"="} + "^"; 
+                              }
+  | E '<' E                   { $$.c = $1.c + $3.c + $2.c; }
+  | E '>' E                   { $$.c = $1.c + $3.c + $2.c; }
+  | E '+' E                   { $$.c = $1.c + $3.c + $2.c; }
+  | E '-' E                   { $$.c = $1.c + $3.c + $2.c; }
+  | E '*' E                   { $$.c = $1.c + $3.c + $2.c; }
+  | E '/' E                   { $$.c = $1.c + $3.c + $2.c; }
+  | E '%' E                   { $$.c = $1.c + $3.c + $2.c; }
+  | E IGUAL E                 { $$.c = $1.c + $3.c + $2.c; }
+  | U
+  ;
+
+U : '-' F {$$.c = "0" + $2.c + $1.c;}
+  | F
+  ;
+
+F :  CDOUBLE
+  | '[' ']'             {$$.c = vector<string>{"[]"};}
   | CINT
-  | OBJ 
-    { $$.c = $1.c + vector<string>{"{}"} + "="; } 
-  | ARRAY 
-    {$$.c = vector<string>{"[]"};}
   | CSTRING
-  | LVALUE 
-    { $$.c = $1.c + "@"; } 
-  | LVALUEPROP
-    { $$.c = $1.c + "[@]"; }
-  | '(' E ')' 
-    { $$.c = $2.c; }
+  | LVALUE              { $$.c = $1.c + "@"; } 
+  | LVALUEPROP          {$$.c = $1.c + "[@]";}
+  | '(' E ')'           { $$.c = $2.c; }
   ;
 
 LVALUE : ID 
        ;
        
-LVALUEPROP : E '[' E ']'
-           | E '.' ID
+LVALUEPROP : F '[' E ']' { $$.c = $1.c + $3.c;}
+           | F '.' ID    { $$.c = $1.c + $3.c;}
            ;
+
+
 
 %%
 
 #include "lex.yy.c"
 
 void yyerror( const char* st ) {
-   puts( st );
+   puts( st ); 
    printf( "Proximo a: %s\n", yytext );
    exit( 0 );
 }
 
 int main( int argc, char* argv[] ) {
   yyparse();
-
+  
   return 0;
 }

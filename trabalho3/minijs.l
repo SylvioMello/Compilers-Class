@@ -36,6 +36,7 @@ DOUBLE        [-+]?{DIGITO}*\.?{DIGITO}+([eE][-+]?{DIGITO}+)?
 "else"     { return token( ELSE ); }
 "for"      { return token( FOR ); }
 "print"    { return token( PRINT ); }
+"while"    { return token( WHILE ); }
 {INT}      { return token( CINT ); } 
 {DOUBLE}   { return token( CDOUBLE ); }
 {STRING}   { return token( CSTRING );}
