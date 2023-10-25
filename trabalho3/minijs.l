@@ -1,18 +1,13 @@
 %{
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
 int token( int tk );
 %}
 
-D  	    [0-9]
-L   	  [A-Za-z_]
-INT	    {D}+
-DOUBLE  {D}+"."{D}+([Ee][+\-]?{D}+)?
-ID      {L}({L}|{D})*
-STRING  (\"([^\"\n]|(\\\")|\"\")+\")|(\'([^\'\n]|(\\\')|\'\')+\')
-
+DIGITO        [0-9]
+LETRA         [A-Za-z_]
+INT           {DIGITO}+
+STRING        (\"([^\"\n]|(\\\")|\"\")+\")|(\'([^\'\n]|(\\\')|\'\')+\')
+ID            {LETRA}({LETRA}|{DIGITO})*
+DOUBLE        {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 
 %%
 

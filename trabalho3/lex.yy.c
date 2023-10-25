@@ -485,13 +485,9 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "minijs.l"
 #line 2 "minijs.l"
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
 int token( int tk );
-#line 494 "lex.yy.c"
-#line 495 "lex.yy.c"
+#line 490 "lex.yy.c"
+#line 491 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -708,10 +704,10 @@ YY_DECL
 		}
 
 	{
-#line 17 "minijs.l"
+#line 12 "minijs.l"
 
 
-#line 715 "lex.yy.c"
+#line 711 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -770,127 +766,127 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 19 "minijs.l"
+#line 14 "minijs.l"
 { coluna += 4; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "minijs.l"
+#line 15 "minijs.l"
 { coluna++; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 21 "minijs.l"
+#line 16 "minijs.l"
 { linha++; coluna = 1; }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 22 "minijs.l"
+#line 17 "minijs.l"
 { }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 23 "minijs.l"
+#line 18 "minijs.l"
 { return token( AND ); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 24 "minijs.l"
+#line 19 "minijs.l"
 { return token( OR ); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 25 "minijs.l"
+#line 20 "minijs.l"
 { return token( ME_IG ); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 26 "minijs.l"
+#line 21 "minijs.l"
 { return token( MA_IG ); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 27 "minijs.l"
+#line 22 "minijs.l"
 { return token( DIF ); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 28 "minijs.l"
+#line 23 "minijs.l"
 { return token( IGUAL ); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 29 "minijs.l"
+#line 24 "minijs.l"
 { return token( MAIS_IGUAL ); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 30 "minijs.l"
+#line 25 "minijs.l"
 { return token( MAIS_MAIS ); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 31 "minijs.l"
+#line 26 "minijs.l"
 { return token( LET ); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 32 "minijs.l"
+#line 27 "minijs.l"
 { return token( IF ); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 33 "minijs.l"
+#line 28 "minijs.l"
 { return token( ELSE ); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 34 "minijs.l"
+#line 29 "minijs.l"
 { return token( FOR ); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 35 "minijs.l"
+#line 30 "minijs.l"
 { return token( PRINT ); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 36 "minijs.l"
+#line 31 "minijs.l"
 { return token( WHILE ); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 37 "minijs.l"
+#line 32 "minijs.l"
 { return token( CINT ); } 
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 38 "minijs.l"
+#line 33 "minijs.l"
 { return token( CDOUBLE ); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 39 "minijs.l"
+#line 34 "minijs.l"
 { return token( CSTRING );}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 40 "minijs.l"
+#line 35 "minijs.l"
 { return token( ID ); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 41 "minijs.l"
+#line 36 "minijs.l"
 { return token( *yytext ); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 43 "minijs.l"
+#line 38 "minijs.l"
 ECHO;
 	YY_BREAK
-#line 894 "lex.yy.c"
+#line 890 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1895,7 +1891,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 43 "minijs.l"
+#line 38 "minijs.l"
 
 
 int token( int tk ) {  
