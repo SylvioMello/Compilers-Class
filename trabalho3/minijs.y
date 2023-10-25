@@ -12,65 +12,33 @@ struct Atributos {
   vector<string> c; // Código
 
   int linha = 0, coluna = 0;
-
   void clear() {
     c.clear();
     linha = 0;
     coluna = 0;
   }
 };
-
 #define YYSTYPE Atributos
+
+enum TipoDecl { DeclVar, DeclConst, DeclLet };
+struct Var {
+  int linha, coluna;
+  TipoDecl tipo;
+};
+map<string,Var> ts; // Tabela de Símbolos
 
 extern "C" int yylex();
 int yyparse();
 void yyerror(const char *);
-
-vector<string> concatena( vector<string> a, vector<string> b ) {
-  a.insert( a.end(), b.begin(), b.end() );
-  return a;
-}
-
-vector<string> operator+( vector<string> a, vector<string> b ) {
-  return concatena( a, b );
-}
-
-vector<string> operator+( vector<string> a, string b ) {
-  a.push_back( b );
-  return a;
-}
-
-vector<string> operator+( string a, vector<string> b ) {
-  return vector<string>{ a } + b;
-}
-
-vector<string> resolve_enderecos( vector<string> entrada ) {
-  map<string,int> label;
-  vector<string> saida;
-  for( int i = 0; i < entrada.size(); i++ )
-    if( entrada[i][0] == ':' )
-        label[entrada[i].substr(1)] = saida.size();
-    else
-      saida.push_back( entrada[i] );
-
-  for( int i = 0; i < saida.size(); i++ )
-    if( label.count( saida[i] ) > 0 )
-        saida[i] = to_string(label[saida[i]]);
-
-  return saida;
-}
-
-string gera_label( string prefixo ) {
-  static int n = 0;
-  return prefixo + "_" + to_string( ++n ) + ":";
-}
-
-void print( vector<string> codigo ) {
-  for( string s : codigo )
-    cout << s << " ";
-
-  cout << endl;
-}
+vector<string> concatena( vector<string> a, vector<string> b );
+vector<string> operator+( vector<string> a, vector<string> b );
+vector<string> operator+( vector<string> a, string b );
+vector<string> operator+( string a, vector<string> b );
+vector<string> resolve_enderecos( vector<string> entrada );
+string gera_label( string prefixo );
+void print( vector<string> codigo );
+void append_symbol_table( TipoDecl decl, Atributos var);
+void check_var_decl(Atributos var);;
 
 %}
 
@@ -153,15 +121,17 @@ CMD_IF : IF '(' E ')' CMD
        ;
 
 CMD_WHILE : WHILE '(' E ')' CMD {
-            string lbl_fim_while = gera_label("lbl_fim_while");
-            string lbl_condicao = gera_label("lbl_condicao");
-            string definicao_lbl_fim_while = ":" + lbl_fim_while;
-            string definicao_lbl_condicao = ":" + lbl_condicao;
-            $$.c = lbl_condicao + $3.c +
-                 "!" + lbl_fim_while 
-                  + "?" + definicao_lbl_condicao 
-                  + "#" + $5.c +
-                  definicao_lbl_fim_while;
+    string lbl_fim_while = gera_label( "fim_while" );
+    string lbl_condicao_while = gera_label( "condicao_while" );
+    string lbl_comando_while = gera_label( "comando_while" );
+    string definicao_lbl_fim_while = ":" + lbl_fim_while;
+    string definicao_lbl_condicao_while = ":" + lbl_condicao_while;
+    string definicao_lbl_comando_while = ":" + lbl_comando_while;
+    
+    $$.c =  definicao_lbl_condicao_while +
+            $3.c + lbl_comando_while + "?" + lbl_fim_while + "#" +
+            definicao_lbl_comando_while + $5.c + lbl_condicao_while + "#" +
+            definicao_lbl_fim_while;
             }
           ;
 
@@ -175,27 +145,27 @@ VARs : VAR ',' VARs
      ;
 
 VAR : ID                
-      { $$.c = $1.c + "&"; }
+      { append_symbol_table( DeclLet, $1 ); $$.c = $1.c + "&"; }
     | ID '=' E          
-      { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+      { append_symbol_table( DeclLet, $1 ); $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     | ID '=' '{' '}'    
-      { $$.c = $1.c + "&" +  $1.c +  vector<string>{"{}"} + "=" + "^";} 
+      { append_symbol_table( DeclLet, $1 ); $$.c = $1.c + "&" +  $1.c +  vector<string>{"{}"} + "=" + "^";} 
     ;
      
 E : LVALUE '=' E 
-    { $$.c = $1.c + $3.c + "="; }
+    {check_var_decl($1); $$.c = $1.c + $3.c + "="; }
   | LVALUE '=' '{' '}'        
-    { $$.c = $1.c + vector<string>{"{}"} + "="; } 
+    {check_var_decl($1); $$.c = $1.c + vector<string>{"{}"} + "="; } 
   | LVALUE MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | LVALUE MAIS_IGUAL E     
-    { $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
+    {check_var_decl($1); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
   | LVALUEPROP '=' E 	
-    { $$.c = $1.c + $3.c + "[=]"; }
+    {check_var_decl($1); $$.c = $1.c + $3.c + "[=]"; }
   | LVALUEPROP '=' '{' '}'    
-    { $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
+    {check_var_decl($1); $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
-    { $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
+    {check_var_decl($1); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
   | E ME_IG E   
     { $$.c = $1.c + $3.c + "<="; }
   | E MA_IG E   
@@ -220,10 +190,10 @@ E : LVALUE '=' E
     { $$.c = $1.c + $3.c + "%"; }
   | '-' E 
     {$$.c = "0" + $2.c + $1.c;}
+  | '[' ']'             
+    {$$.c = vector<string>{"[]"};}
   | CDOUBLE
   | CINT
-  | OBJ 
-  | ARRAY 
   | CSTRING
   | LVALUE 
     { $$.c = $1.c + "@"; } 
@@ -244,6 +214,73 @@ LVALUEPROP : E '[' E ']' { $$.c = $1.c + $3.c;}
 %%
 
 #include "lex.yy.c"
+
+vector<string> concatena( vector<string> a, vector<string> b ) {
+  a.insert( a.end(), b.begin(), b.end() );
+  return a;
+}
+
+vector<string> operator+( vector<string> a, vector<string> b ) {
+  return concatena( a, b );
+}
+
+vector<string> operator+( vector<string> a, string b ) {
+  a.push_back( b );
+  return a;
+}
+
+vector<string> operator+( string a, vector<string> b ) {
+  return vector<string>{ a } + b;
+}
+
+vector<string> resolve_enderecos( vector<string> entrada ) {
+  map<string,int> label;
+  vector<string> saida;
+  for( int i = 0; i < entrada.size(); i++ )
+    if( entrada[i][0] == ':' )
+        label[entrada[i].substr(1)] = saida.size();
+    else
+      saida.push_back( entrada[i] );
+
+  for( int i = 0; i < saida.size(); i++ )
+    if( label.count( saida[i] ) > 0 )
+        saida[i] = to_string(label[saida[i]]);
+
+  return saida;
+}
+
+string gera_label( string prefixo ) {
+  static int n = 0;
+  return prefixo + "_" + to_string( ++n ) + ":";
+}
+
+void print( vector<string> codigo ) {
+  for( string s : codigo )
+    cout << s << " ";
+
+  cout << endl;
+}
+
+void check_var_decl(Atributos var){
+     string var_identifier = var.c[0];
+     auto it = ts.find(var_identifier);
+     if (it == ts.end()) { cout << "Erro: a variável '" << var_identifier << "' não foi declarada." << '\n';
+                           exit(1);
+                         }
+}
+
+void append_symbol_table( TipoDecl decl, Atributos var){
+    Var placeholder;
+    placeholder.linha = var.linha;
+    placeholder.coluna = var.coluna;
+    placeholder.tipo = decl;
+    string var_identifier = var.c[0];
+    auto it = ts.find(var_identifier);
+    if (it == ts.end()) { ts[var_identifier] = placeholder; } 
+    else { cout << "Erro: a variável '" << var_identifier << "' ja foi declarada na linha " + to_string(ts[var_identifier].linha) +"." << endl;
+           exit(1);
+         }
+}
 
 void yyerror( const char* st ) {
    puts( st );
