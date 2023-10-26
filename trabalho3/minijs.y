@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int linha = 1, coluna = 1;
+int linha = 1, coluna = 0;
 
 struct Atributos {
   vector<string> c; // Código
@@ -20,12 +20,13 @@ struct Atributos {
 };
 #define YYSTYPE Atributos
 
-enum TipoDecl { DeclVar, DeclConst, DeclLet };
-struct Var {
-  int linha, coluna;
+enum TipoDecl { Let = 1, Const, Var };
+struct Simbolo {
   TipoDecl tipo;
+  int linha;
+  int coluna;
 };
-map<string,Var> ts; // Tabela de Símbolos
+map< string, Simbolo > ts; // Tabela de símbolos
 
 extern "C" int yylex();
 int yyparse();
@@ -37,13 +38,13 @@ vector<string> operator+( string a, vector<string> b );
 vector<string> resolve_enderecos( vector<string> entrada );
 string gera_label( string prefixo );
 void print( vector<string> codigo );
-void append_symbol_table( TipoDecl decl, Atributos var);
-void check_var_decl(Atributos var);;
+vector<string> declara_var( TipoDecl tipo, string nome, int linha, int coluna );
+void checa_simbolo( string nome, bool modificavel );
 
 %}
 
-%token ID IF ELSE LET OBJ ARRAY FOR WHILE
-%token CDOUBLE CSTRING CINT
+%token IF ELSE FOR WHILE LET CONST VAR OBJ ARRAY
+%token ID CDOUBLE CSTRING CINT
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS PRINT
 
@@ -66,6 +67,8 @@ CMDs : CMDs CMD {$$.c = $1.c + $2.c;}
      ;
 
 CMD : CMD_LET ';'
+    | CMD_VAR ';'
+    | CMD_CONST ';'
     | CMD_FOR
     | CMD_IF
     | CMD_WHILE
@@ -135,37 +138,70 @@ CMD_WHILE : WHILE '(' E ')' CMD {
             }
           ;
 
-CMD_LET : LET VARs 
-          { $$.c = $2.c; }
+CMD_LET : LET LET_VARs { $$.c = $2.c; }
         ;
 
-VARs : VAR ',' VARs 
-       { $$.c = $1.c + $3.c; } 
-     | VAR
-     ;
+LET_VARs : LET_VAR ',' LET_VARs { $$.c = $1.c + $3.c; } 
+         | LET_VAR
+         ;
 
-VAR : ID                
-      { append_symbol_table( DeclLet, $1 ); $$.c = $1.c + "&"; }
-    | ID '=' E          
-      { append_symbol_table( DeclLet, $1 ); $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
-    | ID '=' '{' '}'    
-      { append_symbol_table( DeclLet, $1 ); $$.c = $1.c + "&" +  $1.c +  vector<string>{"{}"} + "=" + "^";} 
-    ;
+LET_VAR : ID  
+          { $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ); }
+        | ID '=' E
+          { 
+            $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) + 
+                   $1.c + $3.c + "=" + "^"; }
+        | ID '=' '{' '}'    
+          { $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) +
+                   $1.c + vector<string>{"{}"} + "=" + "^";} 
+        ;
+
+CMD_VAR : VAR VAR_VARs { $$.c = $2.c; }
+        ;
+        
+VAR_VARs : VAR_VAR ',' VAR_VARs { $$.c = $1.c + $3.c; } 
+         | VAR_VAR
+         ;
+
+VAR_VAR : ID  
+          { $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ); }
+        | ID '=' E
+          {  $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) + 
+                    $1.c + $3.c + "=" + "^"; }
+        | ID '=' '{' '}'    
+          { $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) +
+                   $1.c + vector<string>{"{}"} + "=" + "^";} 
+        ;
+  
+CMD_CONST: CONST CONST_VARs { $$.c = $2.c; }
+         ;
+  
+CONST_VARs : CONST_VAR ',' CONST_VARs { $$.c = $1.c + $3.c; } 
+           | CONST_VAR
+           ;
+
+CONST_VAR : ID '=' E
+            { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
+                     $1.c + $3.c + "=" + "^"; }
+          | ID '=' '{' '}'    
+            { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) +
+                   $1.c + vector<string>{"{}"} + "=" + "^";} 
+          ;
      
 E : LVALUE '=' E 
-    {check_var_decl($1); $$.c = $1.c + $3.c + "="; }
+    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
   | LVALUE '=' '{' '}'        
-    {check_var_decl($1); $$.c = $1.c + vector<string>{"{}"} + "="; } 
+    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + "{}" + "="; } 
   | LVALUE MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | LVALUE MAIS_IGUAL E     
-    {check_var_decl($1); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
+    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
   | LVALUEPROP '=' E 	
-    {check_var_decl($1); $$.c = $1.c + $3.c + "[=]"; }
+    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
   | LVALUEPROP '=' '{' '}'    
-    {check_var_decl($1); $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
+    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
-    {check_var_decl($1); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
+    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
   | E ME_IG E   
     { $$.c = $1.c + $3.c + "<="; }
   | E MA_IG E   
@@ -196,7 +232,7 @@ E : LVALUE '=' E
   | CINT
   | CSTRING
   | LVALUE 
-    { $$.c = $1.c + "@"; } 
+    { checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@"; } 
   | LVALUEPROP
     { $$.c = $1.c + "[@]"; }
   | '(' E ')' 
@@ -261,25 +297,32 @@ void print( vector<string> codigo ) {
   cout << endl;
 }
 
-void check_var_decl(Atributos var){
-     string var_identifier = var.c[0];
-     auto it = ts.find(var_identifier);
-     if (it == ts.end()) { cout << "Erro: a variável '" << var_identifier << "' não foi declarada." << '\n';
-                           exit(1);
-                         }
+vector<string> declara_var( TipoDecl tipo, string nome, int linha, int coluna ) {
+  if( ts.count( nome ) == 0 ) {
+    ts[nome] = Simbolo{ tipo, linha, coluna };
+    return vector<string>{ nome, "&" };
+  }
+  else if( tipo == Var && ts[nome].tipo == Var ) {
+    ts[nome] = Simbolo{ tipo, linha, coluna };
+    return vector<string>{};
+  } 
+  else {
+    cerr << "Erro: a variável '" << nome << "' ja foi declarada na linha " << ts[nome].linha << "." <<endl;
+    exit( 1 );     
+  }
 }
 
-void append_symbol_table( TipoDecl decl, Atributos var){
-    Var placeholder;
-    placeholder.linha = var.linha;
-    placeholder.coluna = var.coluna;
-    placeholder.tipo = decl;
-    string var_identifier = var.c[0];
-    auto it = ts.find(var_identifier);
-    if (it == ts.end()) { ts[var_identifier] = placeholder; } 
-    else { cout << "Erro: a variável '" << var_identifier << "' ja foi declarada na linha " + to_string(ts[var_identifier].linha) +"." << endl;
-           exit(1);
-         }
+void checa_simbolo( string nome, bool modificavel ) {
+  if( ts.count( nome ) > 0 ) {
+    if( modificavel && ts[nome].tipo == Const ) {
+      cerr << "Erro: a variável '" << nome << "' não pode ser modificada." << endl;
+      exit( 1 );     
+    }
+  }
+  else {
+    cerr << "Erro: a variável '" << nome << "' não foi declarada." << endl;
+    exit( 1 );     
+  }
 }
 
 void yyerror( const char* st ) {
