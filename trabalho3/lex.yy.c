@@ -362,14 +362,14 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[80] =
     {   0,
-        0,    0,   29,   27,    1,    3,    4,    2,   27,   27,
-       27,   27,   27,   23,   27,   27,   27,   26,   27,   26,
-       26,   26,   26,   26,   26,   26,   26,   27,   27,   11,
-        0,    0,    0,    7,    0,    0,    0,   14,   13,    0,
-       23,    9,   12,   10,   26,    6,   26,   26,   26,   18,
-       26,   26,   26,   26,    5,    8,   25,   25,   25,   25,
-       24,   26,   26,   20,   15,   26,   16,   26,    0,   26,
-       19,   26,   26,    0,   24,   17,   21,   22,    0
+        0,    0,   29,   27,    1,    3,   26,    2,   27,   27,
+       27,   27,   27,   22,   27,   27,   27,   25,   27,   25,
+       25,   25,   25,   25,   25,   25,   25,   27,   27,   10,
+        0,    0,    0,    6,    0,    0,    0,   13,   12,    0,
+       22,    8,   11,    9,   25,    5,   25,   25,   25,   14,
+       25,   25,   25,   25,    4,    7,   24,   24,   24,   24,
+       23,   25,   25,   15,   16,   25,   17,   25,    0,   25,
+       18,   25,   25,    0,   23,   19,   20,   21,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -776,143 +776,143 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 14 "minijs.l"
-{ coluna += 4; }
+{ coluna += 4;                }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 15 "minijs.l"
-{ coluna++; }
+{ coluna++;                   }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
 #line 16 "minijs.l"
-{ linha++; coluna = 1; }
+{ linha++; coluna = 1;        }
 	YY_BREAK
 case 4:
-/* rule 4 can match eol */
 YY_RULE_SETUP
 #line 17 "minijs.l"
-{ }
+{ return token( OBJ );        }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 18 "minijs.l"
-{ return token( OBJ ); }
+{ return token( ARRAY );      }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 19 "minijs.l"
-{ return token( ARRAY ); }
+{ return token( AND );        }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 20 "minijs.l"
-{ return token( AND ); }
+{ return token( OR );         }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 21 "minijs.l"
-{ return token( OR ); }
+{ return token( ME_IG );      }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 22 "minijs.l"
-{ return token( ME_IG ); }
+{ return token( MA_IG );      }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 23 "minijs.l"
-{ return token( MA_IG ); }
+{ return token( DIF );        }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 24 "minijs.l"
-{ return token( DIF ); }
+{ return token( IGUAL );      }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 25 "minijs.l"
-{ return token( IGUAL ); }
+{ return token( MAIS_IGUAL ); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 26 "minijs.l"
-{ return token( MAIS_IGUAL ); }
+{ return token( MAIS_MAIS );  }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 27 "minijs.l"
-{ return token( MAIS_MAIS ); }
+{ return token( IF );         }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 28 "minijs.l"
-{ return token( LET ); }
+{ return token( FOR );        }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 29 "minijs.l"
-{ return token( VAR ); }
+{ return token( LET );        }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 30 "minijs.l"
-{ return token( CONST ); }
+{ return token( VAR );        }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 31 "minijs.l"
-{ return token( IF ); }
+{ return token( ELSE );       }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 32 "minijs.l"
-{ return token( ELSE ); }
+{ return token( CONST );      }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 33 "minijs.l"
-{ return token( FOR ); }
+{ return token( PRINT );      }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 34 "minijs.l"
-{ return token( PRINT ); }
+{ return token( WHILE );      }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 35 "minijs.l"
-{ return token( WHILE ); }
+#line 36 "minijs.l"
+{ return token( CINT );       }   
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 36 "minijs.l"
-{ return token( CINT ); } 
+#line 37 "minijs.l"
+{ return token( CDOUBLE );    }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 37 "minijs.l"
-{ return token( CDOUBLE ); }
+#line 38 "minijs.l"
+{ return token( CSTRING );    }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 38 "minijs.l"
-{ return token( CSTRING );}
+#line 39 "minijs.l"
+{ return token( ID );         }
 	YY_BREAK
 case 26:
+/* rule 26 can match eol */
 YY_RULE_SETUP
-#line 39 "minijs.l"
-{ return token( ID ); }
+#line 40 "minijs.l"
+{                             }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 40 "minijs.l"
-{ return token( *yytext ); }
+#line 41 "minijs.l"
+{ return token( *yytext );    }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 42 "minijs.l"
+#line 43 "minijs.l"
 ECHO;
 	YY_BREAK
 #line 919 "lex.yy.c"
@@ -1920,7 +1920,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 42 "minijs.l"
+#line 43 "minijs.l"
 
 
 int token( int tk ) {  

@@ -151,9 +151,6 @@ LET_VAR : ID
           { 
             $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) + 
                    $1.c + $3.c + "=" + "^"; }
-        | ID '=' OBJ    
-          { $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) +
-                   $1.c + vector<string>{"{}"} + "=" + "^";} 
         ;
 
 CMD_VAR : VAR VAR_VARs { $$.c = $2.c; }
@@ -168,9 +165,6 @@ VAR_VAR : ID
         | ID '=' E
           {  $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) + 
                     $1.c + $3.c + "=" + "^"; }
-        | ID '=' OBJ  
-          { $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) +
-                   $1.c + vector<string>{"{}"} + "=" + "^";} 
         ;
   
 CMD_CONST: CONST CONST_VARs { $$.c = $2.c; }
@@ -183,23 +177,16 @@ CONST_VARs : CONST_VAR ',' CONST_VARs { $$.c = $1.c + $3.c; }
 CONST_VAR : ID '=' E
             { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
                      $1.c + $3.c + "=" + "^"; }
-          | ID '=' OBJ
-            { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) +
-                   $1.c + vector<string>{"{}"} + "=" + "^";} 
           ;
      
 E : LVALUE '=' E 
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
-  | LVALUE '=' OBJ        
-    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + "{}" + "="; } 
   | LVALUE MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | LVALUE MAIS_IGUAL E     
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
   | LVALUEPROP '=' E 	
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
-  | LVALUEPROP '=' OBJ    
-    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + vector<string>{"{}"} + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
   | E ME_IG E   
@@ -228,6 +215,8 @@ E : LVALUE '=' E
     {$$.c = "0" + $2.c + $1.c;}
   | ARRAY             
     {$$.c = vector<string>{"[]"};}
+  | OBJ 
+    { $$.c = vector<string>{"{}"};} 
   | CDOUBLE
   | CINT
   | CSTRING
