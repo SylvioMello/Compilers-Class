@@ -1,1 +1,1 @@
-obj & obj {} = ^ i & i 0 2 - = ^ obj @ nome "Manoel" [=] ^ obj @ nums [] [=] ^ obj @ nums [@] 0 12 [=] ^ obj @ nums [@] 3 12 [=] ^ obj @ nums [@] 3 obj @ nums [@] 3 [@] 1 + [=] ^ obj @ nums [@] i @ i i @ 1 + = ^ 3 + 45 [=] ^ obj @ 'nom' 'e' + obj @ nome [@] "!" + [=] ^ . 
+a & a 4 = ^ b & b 5 = ^ c & d & a @ a a @ 1 + = ^ b @ > 32 ? 38 # c "a e' maior" "!" + = ^ a @ b @ 1 + < 49 ? 53 # d "a e' menor" = ^ . 

@@ -104,9 +104,16 @@ PRIM_E : CMD_LET
        ;
 
 CMD_IF : IF '(' E ')' CMD
-        {   string lbl_fim_if = gera_label( "lbl_fim_if" );
-          $$.c = $3.c + "!" + lbl_fim_if + "?" +
-                 $5.c + (":" + lbl_fim_if);
+        { string lbl_true = gera_label( "lbl_true" );
+          string lbl_fim_if = gera_label( "lbl_fim_if" );
+          string definicao_lbl_true = ":" + lbl_true;
+          string definicao_lbl_fim_if = ":" + lbl_fim_if;
+          $$.c = $3.c +
+                 lbl_true + "?" +
+                 lbl_fim_if + "#" +
+                 definicao_lbl_true + $5.c +
+                 definicao_lbl_fim_if
+                 ;
         }
         | IF '(' E ')' CMD ELSE CMD
         {  string lbl_true = gera_label( "lbl_true" );
