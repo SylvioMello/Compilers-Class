@@ -1692,7 +1692,7 @@ yyreduce:
 
   case 58:
 #line 226 "minijs.y" /* yacc.c:1646  */
-    { (yyval).c = (yyvsp[0]).c + "[@]"; }
+    { checa_simbolo( (yyvsp[0]).c[0], false ); (yyval).c = (yyvsp[0]).c + "[@]"; }
 #line 1697 "y.tab.c" /* yacc.c:1646  */
     break;
 

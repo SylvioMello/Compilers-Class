@@ -223,7 +223,7 @@ E : LVALUE '=' E
   | LVALUE 
     { checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@"; } 
   | LVALUEPROP
-    { $$.c = $1.c + "[@]"; }
+    { checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
     { $$.c = $2.c; }
   ;
