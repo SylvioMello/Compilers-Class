@@ -504,15 +504,16 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "minijs.l"
 #line 2 "minijs.l"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 string lexema;
 int token( int tk );
-std::vector<std::string> tokeniza(const std::string& str);
-std::string trim(const std::string& input_string, const std::string& chars_to_trim);
-#line 515 "lex.yy.c"
+vector<string> tokeniza(const string& str);
+string trim(const string& input_string, const string& chars_to_trim);
 #line 516 "lex.yy.c"
+#line 517 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -729,10 +730,10 @@ YY_DECL
 		}
 
 	{
-#line 20 "minijs.l"
+#line 21 "minijs.l"
 
 
-#line 736 "lex.yy.c"
+#line 737 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -791,160 +792,160 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 22 "minijs.l"
+#line 23 "minijs.l"
 { coluna += 4;                }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "minijs.l"
+#line 24 "minijs.l"
 { coluna++;                   }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 24 "minijs.l"
+#line 25 "minijs.l"
 { linha++; coluna = 1;        }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 25 "minijs.l"
+#line 26 "minijs.l"
 { return token( OBJ );        }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 26 "minijs.l"
+#line 27 "minijs.l"
 { return token( ARRAY );      }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 27 "minijs.l"
+#line 28 "minijs.l"
 { return token( AND );        }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 28 "minijs.l"
+#line 29 "minijs.l"
 { return token( OR );         }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 29 "minijs.l"
+#line 30 "minijs.l"
 { return token( ME_IG );      }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 30 "minijs.l"
+#line 31 "minijs.l"
 { return token( MA_IG );      }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 31 "minijs.l"
+#line 32 "minijs.l"
 { return token( DIF );        }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 32 "minijs.l"
+#line 33 "minijs.l"
 { return token( IGUAL );      }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 33 "minijs.l"
+#line 34 "minijs.l"
 { return token( MAIS_IGUAL ); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 34 "minijs.l"
+#line 35 "minijs.l"
 { return token( MAIS_MAIS );  }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 35 "minijs.l"
+#line 36 "minijs.l"
 { return token( IF );         }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 36 "minijs.l"
+#line 37 "minijs.l"
 { return token( FOR );        }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 37 "minijs.l"
+#line 38 "minijs.l"
 { return token( LET );        }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 38 "minijs.l"
+#line 39 "minijs.l"
 { return token( VAR );        }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 39 "minijs.l"
+#line 40 "minijs.l"
 { return token( ELSE );       }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 40 "minijs.l"
+#line 41 "minijs.l"
 { return token( CONST );      }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 41 "minijs.l"
+#line 42 "minijs.l"
 { return token( PRINT );      }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 42 "minijs.l"
+#line 43 "minijs.l"
 { return token( WHILE );      }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 43 "minijs.l"
+#line 44 "minijs.l"
 { return token( FUNCTION );   }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 44 "minijs.l"
+#line 45 "minijs.l"
 {   lexema   = trim( yytext + 3, "{}" ); 
                 yylval.c = tokeniza( lexema );
                 coluna  += strlen( yytext ); 
-                return token( ASM ); }
+                return ASM; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "minijs.l"
+#line 50 "minijs.l"
 { return token( CINT );       }   
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "minijs.l"
+#line 51 "minijs.l"
 { return token( CDOUBLE );    }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 51 "minijs.l"
+#line 52 "minijs.l"
 { return token( CSTRING );    }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 52 "minijs.l"
+#line 53 "minijs.l"
 { return token( ID );         }
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 53 "minijs.l"
+#line 54 "minijs.l"
 {                             }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 54 "minijs.l"
+#line 55 "minijs.l"
 { return token( *yytext );    }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 56 "minijs.l"
+#line 57 "minijs.l"
 ECHO;
 	YY_BREAK
-#line 948 "lex.yy.c"
+#line 949 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1949,19 +1950,18 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 56 "minijs.l"
+#line 57 "minijs.l"
 
 
-// Function to split a string into tokens using a space as a separator
-std::vector<std::string> tokeniza(const std::string& str) {
-    std::vector<std::string> tokens;
-    std::string token;
+vector<string> tokeniza(const string& str) {
+    vector<string> tokens;
+    string token;
     size_t start = 0, end = 0;
 
-    while (end != std::string::npos) {
+    while (end != string::npos) {
         end = str.find(' ', start);
 
-        if (end != std::string::npos) {
+        if (end != string::npos) {
             token = str.substr(start, end - start);
             start = end + 1;
         } else {
@@ -1974,16 +1974,15 @@ std::vector<std::string> tokeniza(const std::string& str) {
     return tokens;
 }
 
-// Function to trim specified characters from the beginning and end of a string
-std::string trim(const std::string& input_string, const std::string& chars_to_trim) {
+string trim(const string& input_string, const string& chars_to_trim) {
     size_t start = input_string.find_first_not_of(chars_to_trim);
-    if (start == std::string::npos) {
+    if (start == string::npos) {
         // The string contains only characters to trim
         return "";
     }
 
     size_t end = input_string.find_last_not_of(chars_to_trim);
-    if (end == std::string::npos) {
+    if (end == string::npos) {
         // This shouldn't occur, but for safety
         end = start;
     }

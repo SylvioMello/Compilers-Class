@@ -1,11 +1,12 @@
 %{
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 string lexema;
 int token( int tk );
-std::vector<std::string> tokeniza(const std::string& str);
-std::string trim(const std::string& input_string, const std::string& chars_to_trim);
+vector<string> tokeniza(const string& str);
+string trim(const string& input_string, const string& chars_to_trim);
 %}
 
 ID      {LETRA}({LETRA}|{DIGITO})*
@@ -44,7 +45,7 @@ DOUBLE  {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 {ASMFULL}   {   lexema   = trim( yytext + 3, "{}" ); 
                 yylval.c = tokeniza( lexema );
                 coluna  += strlen( yytext ); 
-                return token( ASM ); }
+                return ASM; }
 
 {INT}     { return token( CINT );       }   
 {DOUBLE}  { return token( CDOUBLE );    }
@@ -55,16 +56,15 @@ DOUBLE  {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 
 %%
 
-// Function to split a string into tokens using a space as a separator
-std::vector<std::string> tokeniza(const std::string& str) {
-    std::vector<std::string> tokens;
-    std::string token;
+vector<string> tokeniza(const string& str) {
+    vector<string> tokens;
+    string token;
     size_t start = 0, end = 0;
 
-    while (end != std::string::npos) {
+    while (end != string::npos) {
         end = str.find(' ', start);
 
-        if (end != std::string::npos) {
+        if (end != string::npos) {
             token = str.substr(start, end - start);
             start = end + 1;
         } else {
@@ -77,16 +77,15 @@ std::vector<std::string> tokeniza(const std::string& str) {
     return tokens;
 }
 
-// Function to trim specified characters from the beginning and end of a string
-std::string trim(const std::string& input_string, const std::string& chars_to_trim) {
+string trim(const string& input_string, const string& chars_to_trim) {
     size_t start = input_string.find_first_not_of(chars_to_trim);
-    if (start == std::string::npos) {
+    if (start == string::npos) {
         // The string contains only characters to trim
         return "";
     }
 
     size_t end = input_string.find_last_not_of(chars_to_trim);
-    if (end == std::string::npos) {
+    if (end == string::npos) {
         // This shouldn't occur, but for safety
         end = start;
     }
