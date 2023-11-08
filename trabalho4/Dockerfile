@@ -1,6 +1,5 @@
 FROM ubuntu:18.04
 
-
 RUN apt update && \
     apt -y install flex bison g++ make
 
@@ -8,4 +7,4 @@ RUN apt update && \
 WORKDIR /trabalho4
 
 
-ENTRYPOINT [ "make --quiet" ]
+ENTRYPOINT [ "make" ]

@@ -1,6 +1,3 @@
-let a = 4, b = 5, c, d;
-if( a++ > b )
-  c = "a e' maior"
-      + "!";
-if( a < b + 1 )
-  d = "a e' menor";
+let a = {}, b = [], c = 9;
+let __9 = 1.1; let _ = "abc"
+;
