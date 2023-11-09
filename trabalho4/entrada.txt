@@ -1,6 +1,13 @@
-function f(a, b) {
-    let c = a * b;
-    return c;
+const a = 9;
+function log( msg ) {
+  msg asm{println # undefined};
 }
 
-f(3,4);
+var c = [
+];
+(log)( c );
+{ let a = 3.1; }
+{ const a = 8;
+  let b = 7;
+  c = b; }
+var c = c+ c++;

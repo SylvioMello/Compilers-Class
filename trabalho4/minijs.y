@@ -1,9 +1,11 @@
 %{
-#include <iostream>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
 #include <vector>
 #include <map>
-
+#include <algorithm>
 using namespace std;
 
 int linha = 1, coluna = 0;
@@ -59,6 +61,8 @@ string gera_label( string prefixo );
 void print( vector<string> codigo );
 vector<string> declara_var( TipoDecl tipo, string nome, int linha, int coluna );
 void checa_simbolo( string nome, bool modificavel );
+string trim(string str, string charsToRemove);
+vector<string> tokeniza(string asmLine);
 
 %}
 
@@ -96,9 +100,11 @@ CMD : CMD_LET ';'
       { $$.c = $2.c + "println" + "#"; }
     | RETURN E ';'
       { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
+    | E ASM 
+      { $$.c = $1.c + $2.c + "^"; }
     | '{' EMPILHA_TS CMDs '}'
       { ts.pop_back();
-        $$.c = "<{" + $3.c + "}>"; }
+        $$.c = vector<string>{"<{"} + $3.c + vector<string>{"}>"}; }
     | E ';'
       {$$.c = $1.c + "^";}
     | ';' 
@@ -306,7 +312,7 @@ E : LVALUE '=' E
     {
       $$.c = $3.c + to_string( $3.contador ) + $1.c + "$";
     }
-  | ARRAY             
+  | '[' ']'             
     {$$.c = vector<string>{"[]"};}
   | OBJ 
     { $$.c = vector<string>{"{}"};} 
@@ -390,6 +396,28 @@ void print( vector<string> codigo ) {
     cout << s << " ";
 
   cout << endl;
+}
+
+string trim(string str, string charsToRemove){
+	for(auto c : charsToRemove){
+		str.erase(remove(str.begin(), str.end(), c), str.end());
+	}
+	return str;
+}
+
+vector<string> tokeniza(string asmLine){
+	vector<string> instructions;
+	string word = "";
+	for(auto c : asmLine){
+		if(c != ' ')
+			word = word + c;
+		else {
+			instructions.push_back(word);
+			word = "";
+		}
+	}
+	instructions.push_back(word);
+	return instructions;
 }
 
 vector<string> declara_var( TipoDecl tipo, string nome, int linha, int coluna ) {
