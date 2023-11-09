@@ -62,7 +62,7 @@ void checa_simbolo( string nome, bool modificavel );
 
 %}
 
-%token IF ELSE FOR WHILE LET CONST VAR OBJ ARRAY FUNCTION ASM
+%token IF ELSE FOR WHILE LET CONST VAR OBJ ARRAY FUNCTION ASM RETURN
 %token ID CDOUBLE CSTRING CINT
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS PRINT
@@ -94,6 +94,8 @@ CMD : CMD_LET ';'
     | CMD_FUNC
     | PRINT E ';'
       { $$.c = $2.c + "println" + "#"; }
+    | RETURN E ';'
+      { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
     | '{' EMPILHA_TS CMDs '}'
       { ts.pop_back();
         $$.c = "<{" + $3.c + "}>"; }

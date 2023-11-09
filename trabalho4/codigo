@@ -1,1 +1,1 @@
-b & b {} = '&funcao' 16 [=] ^ 1 1 b @ $ ^ . a & a arguments @ 0 [@] = ^ b & b arguments @ 1 [@] = ^ c & c arguments @ 2 [@] = ^ a @ println # undefined @ '&retorno' @ ~ 
+f & f {} = '&funcao' 17 [=] ^ 3 4 1 f @ $ ^ . a & a arguments @ 0 [@] = ^ b & b arguments @ 1 [@] = ^ c & c a @ b @ * = ^ c @ '&retorno' @ ~ undefined @ '&retorno' @ ~ 

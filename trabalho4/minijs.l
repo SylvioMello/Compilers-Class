@@ -41,6 +41,7 @@ DOUBLE  {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 "const"     { return token( CONST );      }
 "print"     { return token( PRINT );      }
 "while"     { return token( WHILE );      }
+"return"    { return token( RETURN );       }
 "function"  { return token( FUNCTION );   }
 {ASMFULL}   {   lexema   = trim( yytext + 3, "{}" ); 
                 yylval.c = tokeniza( lexema );
