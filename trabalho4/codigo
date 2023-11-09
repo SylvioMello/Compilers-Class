@@ -1,1 +1,1 @@
-b & b {} = '&funcao' 10 [=] ^ . 'hi' println # undefined @ '&retorno' @ ~ 
+b & b {} = '&funcao' 10 [=] ^ . a & a arguments @ 0 [@] = ^ b & b arguments @ 1 [@] = ^ c & c arguments @ 2 [@] = ^ a @ println # b @ println # c @ println # undefined @ '&retorno' @ ~ 
