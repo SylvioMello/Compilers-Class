@@ -77,7 +77,7 @@ vector<string> tokeniza(string asmLine);
 %left AND OR
 %left '+' '-'
 %left '*' '/' '%'
-%right '[' '('
+%right '[' '(' '{'
 %left '.'
 
 %%
@@ -279,7 +279,7 @@ E : LVALUE '=' E
   | LVALUE MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | LVALUE MAIS_IGUAL E     
-    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }  
+    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
   | LVALUEPROP '=' E 	
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
@@ -314,8 +314,12 @@ E : LVALUE '=' E
     }
   | '[' ']'             
     {$$.c = vector<string>{"[]"};}
-  | OBJ 
-    { $$.c = vector<string>{"{}"};} 
+  | '{' '}'
+    {$$.c = vector<string>{"{}"};}
+  | ARRAY            
+    {$$.c = vector<string>{"[]"};}
+  | OBJ
+    {$$.c = vector<string>{"{}"};}
   | CDOUBLE
   | CINT
   | CSTRING
@@ -435,9 +439,7 @@ vector<string> declara_var( TipoDecl tipo, string nome, int linha, int coluna ) 
     return vector<string>{};
   } 
   else {
-    cerr << "Redeclaração de '" << nomeTipoDecl[topo[nome].tipo] << " " << nome 
-         << "' na linha: " << topo[nome].linha 
-         << ", coluna: " << topo[nome].coluna << endl;
+    cerr << "Erro: a variável '" << nome << "' já foi declarada na linha " << topo[nome].linha << "." <<endl;
     exit( 1 );     
   }
 }

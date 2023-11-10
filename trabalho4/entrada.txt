@@ -1,13 +1,11 @@
-const a = 9;
-function log( msg ) {
-  msg asm{println # undefined};
+let b, c;
+{ const a = 0;
+  var c;
 }
-
-var c = [
-];
-(log)( c );
-{ let a = 3.1; }
-{ const a = 8;
-  let b = 7;
-  c = b; }
-var c = c+ c++;
+let a = 8;
+if( a ) {print 'hi';}
+else {
+  let b, d = { };
+}
+let d;
+let a;
