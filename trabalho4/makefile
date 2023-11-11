@@ -2,8 +2,8 @@ all: saida codigo
 	echo "=== Execução ==="
 	./interpretador < codigo
 
-codigo: saida entrada.txt
-	./saida < entrada.txt > codigo
+codigo: saida entrada123.txt
+	./saida < entrada123.txt > codigo
 	echo "=== Codigo ==="
 	cat codigo
 

@@ -53,6 +53,7 @@ extern "C" int yylex();
 int yyparse();
 void yyerror(const char *);
 bool is_function_scope = false;
+bool operator!=(vector<string> a, vector<string> b);
 vector<string> concatena( vector<string> a, vector<string> b );
 vector<string> operator+( vector<string> a, vector<string> b );
 vector<string> operator+( vector<string> a, string b );
@@ -138,7 +139,16 @@ PARAMs : PARAMs ',' PARAM
                 + "[@]" + "=" + "^"; 
          is_function_scope = true; 
          if( $3.valor_default.size() > 0 ) {
-           // Gerar código para testar valor default.
+           string lbl_true = gera_label( "lbl_true" );
+           string lbl_fim_if = gera_label( "lbl_fim_if" );
+           string definicao_lbl_true = ":" + lbl_true;
+           string definicao_lbl_fim_if = ":" + lbl_fim_if;
+           $$.c = to_string($3.c != vector<string>{"undefined"})  +
+                 lbl_true + "?" + $3.c +
+                 lbl_fim_if + "#" +
+                 definicao_lbl_true + $3.valor_default +
+                 definicao_lbl_fim_if
+                 ;
          }
          $$.contador = $1.contador + $3.contador; 
        }
@@ -147,7 +157,16 @@ PARAMs : PARAMs ',' PARAM
          $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" + "[@]" + "=" + "^"; 
          is_function_scope = true; 
          if( $1.valor_default.size() > 0 ) {
-           // Gerar código para testar valor default.
+           string lbl_true = gera_label( "lbl_true" );
+           string lbl_fim_if = gera_label( "lbl_fim_if" );
+           string definicao_lbl_true = ":" + lbl_true;
+           string definicao_lbl_fim_if = ":" + lbl_fim_if;
+           $$.c = to_string($1.c != vector<string>{"undefined"})  +
+                 lbl_true + "?" + $1.c +
+                 lbl_fim_if + "#" +
+                 definicao_lbl_true + $1.valor_default +
+                 definicao_lbl_fim_if
+                 ;
          }
          $$.contador = $1.contador; 
        }
@@ -373,6 +392,10 @@ vector<string> operator+( vector<string> a, string b ) {
 
 vector<string> operator+( string a, vector<string> b ) {
   return vector<string>{ a } + b;
+}
+
+bool operator!=(vector<string> a, vector<string> b) {
+  return a != b;
 }
 
 vector<string> resolve_enderecos( vector<string> entrada ) {

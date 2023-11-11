@@ -1,0 +1,4 @@
+function f( x = 9, y = 8.1 ) {
+  log( 'Parametros: ' ); log( x ); log( ' ' ); log( y, true );
+  return x + y;
+}
