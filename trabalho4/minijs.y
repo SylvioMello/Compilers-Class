@@ -52,6 +52,7 @@ vector<string> funcoes;
 extern "C" int yylex();
 int yyparse();
 void yyerror(const char *);
+bool is_function_scope = false;
 vector<string> concatena( vector<string> a, vector<string> b );
 vector<string> operator+( vector<string> a, vector<string> b );
 vector<string> operator+( vector<string> a, string b );
@@ -123,6 +124,7 @@ CMD_FUNC : FUNCTION ID { declara_var( Var, $2.c[0], $2.linha, $2.coluna ); }
              funcoes = funcoes + definicao_lbl_endereco_funcao + $6.c + $9.c +
                        "undefined" + "@" + "'&retorno'" + "@"+ "~";
              ts.pop_back(); 
+             is_function_scope = false; 
            }
          ;
 
@@ -134,7 +136,7 @@ PARAMs : PARAMs ',' PARAM
        { // a & a arguments @ 0 [@] = ^ 
          $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string( $1.contador )
                 + "[@]" + "=" + "^"; 
-                
+         is_function_scope = true; 
          if( $3.valor_default.size() > 0 ) {
            // Gerar código para testar valor default.
          }
@@ -143,7 +145,7 @@ PARAMs : PARAMs ',' PARAM
      | PARAM 
        { // a & a arguments @ 0 [@] = ^ 
          $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" + "[@]" + "=" + "^"; 
-                
+         is_function_scope = true; 
          if( $1.valor_default.size() > 0 ) {
            // Gerar código para testar valor default.
          }
@@ -323,9 +325,9 @@ E : LVALUE '=' E
   | CSTRING
   | BOOL
   | LVALUE 
-    { $$.c = $1.c + "@"; } 
+    { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}  
   | LVALUEPROP
-    { $$.c = $1.c + "[@]"; }
+    { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
     { $$.c = $2.c; }
   ;
@@ -339,7 +341,7 @@ ARGs : ARGs ',' E
          $$.contador++; }
      | E
        { $$.c = $1.c;
-         $$.contador++;}
+         $$.contador++; }
      ;
 
 
