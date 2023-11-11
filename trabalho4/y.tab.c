@@ -1873,13 +1873,13 @@ yyreduce:
 
   case 74:
 #line 326 "minijs.y" /* yacc.c:1646  */
-    { checa_simbolo( (yyvsp[0]).c[0], false ); (yyval).c = (yyvsp[0]).c + "@"; }
+    { (yyval).c = (yyvsp[0]).c + "@"; }
 #line 1878 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
 #line 328 "minijs.y" /* yacc.c:1646  */
-    { checa_simbolo( (yyvsp[0]).c[0], false ); (yyval).c = (yyvsp[0]).c + "[@]"; }
+    { (yyval).c = (yyvsp[0]).c + "[@]"; }
 #line 1884 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1898,14 +1898,14 @@ yyreduce:
   case 79:
 #line 338 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[-2]).c + (yyvsp[0]).c;
-         (yyval).contador = (yyvsp[-2]).contador + (yyvsp[0]).contador; }
+         (yyval).contador++; }
 #line 1903 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
 #line 341 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[0]).c;
-         (yyval).contador = 1; }
+         (yyval).contador++;}
 #line 1910 "y.tab.c" /* yacc.c:1646  */
     break;
 

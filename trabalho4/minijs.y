@@ -323,9 +323,9 @@ E : LVALUE '=' E
   | CSTRING
   | BOOL
   | LVALUE 
-    { checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@"; } 
+    { $$.c = $1.c + "@"; } 
   | LVALUEPROP
-    { checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
+    { $$.c = $1.c + "[@]"; }
   | '(' E ')' 
     { $$.c = $2.c; }
   ;
@@ -336,10 +336,10 @@ LISTA_ARGs : ARGs
              
 ARGs : ARGs ',' E
        { $$.c = $1.c + $3.c;
-         $$.contador = $1.contador + $3.contador; }
+         $$.contador++; }
      | E
        { $$.c = $1.c;
-         $$.contador = 1; }
+         $$.contador++;}
      ;
 
 

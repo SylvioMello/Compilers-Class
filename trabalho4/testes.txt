@@ -120,6 +120,9 @@ var b = valor
 )
 ;
 
+sqr & sqr {} = '&funcao' 20 [=] ^ a & a 3.3 1 sqr @ $ = ^ . x & x arguments @ 0 [@] = ^ y & y arguments @ 1 [@] = ^ x @ x @ * '&retorno' @ ~ undefined @ '&retorno' @ ~
+sqr & sqr {} = '&funcao' 21 [=] ^ a & a 3.3 7 1 sqr @ $ = ^ . x & x arguments @ 0 [@] = ^ y & y arguments @ 1 [@] = ^ x @ x @ * y @ + '&retorno' @ ~ undefined @ '&retorno' @ ~
+
 --- Expected output (exact text)---
 === Console ===
 === Vars ===
