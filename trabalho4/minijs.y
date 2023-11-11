@@ -67,9 +67,9 @@ vector<string> tokeniza(string asmLine);
 %}
 
 %token IF ELSE FOR WHILE LET CONST VAR OBJ ARRAY FUNCTION ASM RETURN
-%token ID CDOUBLE CSTRING CINT
+%token ID CDOUBLE CSTRING CINT BOOL
 %token AND OR ME_IG MA_IG DIF IGUAL
-%token MAIS_IGUAL MAIS_MAIS PRINT
+%token MAIS_IGUAL MAIS_MAIS
 
 %right '='
 %nonassoc IGUAL MAIS_IGUAL MAIS_MAIS MA_IG ME_IG DIF
@@ -96,8 +96,6 @@ CMD : CMD_LET ';'
     | CMD_IF
     | CMD_WHILE
     | CMD_FUNC
-    | PRINT E ';'
-      { $$.c = $2.c + "println" + "#"; }
     | RETURN E ';'
       { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
     | E ASM 
@@ -323,6 +321,7 @@ E : LVALUE '=' E
   | CDOUBLE
   | CINT
   | CSTRING
+  | BOOL
   | LVALUE 
     { checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@"; } 
   | LVALUEPROP

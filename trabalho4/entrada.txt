@@ -1,11 +1,12 @@
-let b, c;
-{ const a = 0;
-  var c;
+function print(x) { x asm{println # undefined};
 }
-let a = 8;
-if( a ) {print 'hi';}
-else {
-  let b, d = { };
+var a, b = [];
+const c = -1;
+print( c + c );
+(b)[0] = true;
+if( b[0] ) {
+  let b = { };
+  (b).m = 9;
+  print( b );
+  a = b.m;
 }
-let d;
-let a;

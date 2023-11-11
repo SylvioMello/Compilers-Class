@@ -6,6 +6,7 @@ ID      {LETRA}({LETRA}|{DIGITO})*
 INT     {DIGITO}+
 LETRA   [A-Za-z_]
 DIGITO  [0-9]
+BOOL	  "true"|"false"
 STRING  (\"([^\"\n]|(\\\")|\"\")+\")|(\'([^\'\n]|(\\\')|\'\')+\')
 DOUBLE  {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 
@@ -30,7 +31,6 @@ DOUBLE  {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 "var"       { return token( VAR );        }
 "else"      { return token( ELSE );       }
 "const"     { return token( CONST );      }
-"print"     { return token( PRINT );      }
 "while"     { return token( WHILE );      }
 "return"    { return token( RETURN );       }
 "function"  { return token( FUNCTION );   }
@@ -39,6 +39,7 @@ DOUBLE  {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
                 coluna += strlen( yytext ); 
                 return ASM; }
 
+{BOOL}    { return token( BOOL );    }
 {INT}     { return token( CINT );       }   
 {DOUBLE}  { return token( CDOUBLE );    }
 {STRING}  { return token( CSTRING );    }
