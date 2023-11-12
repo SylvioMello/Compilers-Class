@@ -139,12 +139,13 @@ PARAMs : PARAMs ',' PARAM
                 + "[@]" + "=" + "^"; 
          is_function_scope = true; 
          if( $3.valor_default.size() > 0 ) {
+           cout << "entrei aqui" << endl;
            string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = to_string($3.c != vector<string>{"undefined"})  +
-                 lbl_true + "?" + $3.c +
+           $$.c = $3.c + "@" + vector<string>{"undefined"} + "!=" +
+                 lbl_true + "?" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + $3.valor_default +
                  definicao_lbl_fim_if
@@ -161,8 +162,8 @@ PARAMs : PARAMs ',' PARAM
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = to_string($1.c != vector<string>{"undefined"})  +
-                 lbl_true + "?" + $1.c +
+           $$.c = $1.c + "@" + vector<string>{"undefined"} + "!=" +
+                 lbl_true + "?" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + $1.valor_default +
                  definicao_lbl_fim_if
