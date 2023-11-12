@@ -100,7 +100,7 @@ CMD : CMD_LET ';'
     | CMD_FUNC
     | RETURN E ';'
       { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
-    | E ASM 
+    | E ASM ';'
       { $$.c = $1.c + $2.c + "^"; }
     | '{' EMPILHA_TS CMDs '}'
       { ts.pop_back();
@@ -139,12 +139,11 @@ PARAMs : PARAMs ',' PARAM
                 + "[@]" + "=" + "^"; 
          is_function_scope = true; 
          if( $3.valor_default.size() > 0 ) {
-           cout << "entrei aqui" << endl;
            string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $3.c + "@" + vector<string>{"undefined"} + "!=" +
+           $$.c = $3.c + vector<string>{"undefined"} + "!=" +
                  lbl_true + "?" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + $3.valor_default +
@@ -162,7 +161,7 @@ PARAMs : PARAMs ',' PARAM
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $1.c + "@" + vector<string>{"undefined"} + "!=" +
+           $$.c = $1.c  + vector<string>{"undefined"} + "!=" +
                  lbl_true + "?" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + $1.valor_default +

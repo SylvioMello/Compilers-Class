@@ -1,6 +1,11 @@
+function f( x = 9, y = 8.1 ) {
+  log( 'Parametros: ' ); log( x ); log( ' ' ); log( y, true );
+  return x + y;
+}
+
 function log( msg = 'Default!', pular_linha = false ) {
   if( pular_linha )
     msg asm{println # undefined};
-  else 
+  else
     msg asm{print # undefined};
 }
