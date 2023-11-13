@@ -1560,7 +1560,7 @@ yyreduce:
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           (yyval).c = (yyvsp[0]).c + vector<string>{"undefined"} + "!=" +
+           (yyval).c = (yyval).c + (yyvsp[0]).c + "@" + vector<string>{"undefined"} + "!=" +
                  lbl_true + "?" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + (yyvsp[0]).valor_default +
@@ -1582,7 +1582,7 @@ yyreduce:
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           (yyval).c = (yyvsp[0]).c  + vector<string>{"undefined"} + "!=" +
+           (yyval).c = (yyval).c + (yyvsp[0]).c + "@" + vector<string>{"undefined"} + "!=" +
                  lbl_true + "?" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + (yyvsp[0]).valor_default +
@@ -1609,7 +1609,7 @@ yyreduce:
     { // Código do IF
         (yyval).c = (yyvsp[-2]).c;
         (yyval).contador = 1;
-        (yyval).valor_default = (yyvsp[0]).c;         
+        (yyval).valor_default = (yyvsp[0]).c + "^";         
         declara_var( Let, (yyvsp[-2]).c[0], (yyvsp[-2]).linha, (yyvsp[-2]).coluna ); 
       }
 #line 1616 "y.tab.c" /* yacc.c:1646  */

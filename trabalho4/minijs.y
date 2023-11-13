@@ -143,8 +143,8 @@ PARAMs : PARAMs ',' PARAM
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $3.c + vector<string>{"undefined"} + "!=" +
-                 lbl_true + "?" +
+           $$.c = $$.c + $3.c + "@" + vector<string>{"undefined"} + "!=" +
+                 lbl_true + "?" + $3.c +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + $3.valor_default +
                  definicao_lbl_fim_if
@@ -161,7 +161,7 @@ PARAMs : PARAMs ',' PARAM
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $1.c  + vector<string>{"undefined"} + "!=" +
+           $$.c = $$.c + $1.c + "@" + vector<string>{"undefined"} + "!=" +
                  lbl_true + "?" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + $1.valor_default +
@@ -182,7 +182,7 @@ PARAM : ID
       { // Código do IF
         $$.c = $1.c;
         $$.contador = 1;
-        $$.valor_default = $3.c;         
+        $$.valor_default = $3.c + "^";         
         declara_var( Let, $1.c[0], $1.linha, $1.coluna ); 
       }
     ;
