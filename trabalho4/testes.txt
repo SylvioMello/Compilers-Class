@@ -6,6 +6,12 @@ function log( msg ) {
 
 let r = log( 'Hello, world!' );
 
+
+f & f {} = '&funcao' 15 [=] ^ 0 f @ $ ^ . x & x arguments @ 0 [@] = ^ x @ undefined != 36 ? x 9 = ^ 40 # x x = ^ x @ println # undefined ^ undefined @ '&retorno' @ ~ 
+                                                                      3   4         != 12 ? 4 println # undefined ^ 17 # 3 println # undefined ^ . 
+
+
+
 --- Expected output (exact text)---
 === Console ===
 Hello, world!

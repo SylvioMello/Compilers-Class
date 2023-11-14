@@ -143,10 +143,11 @@ PARAMs : PARAMs ',' PARAM
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $$.c + $3.c + "@" + vector<string>{"undefined"} + "!=" +
-                 lbl_true + "?" + $3.c +
+           $$.c = $$.c + declara_var( Var, "placeholder", 1, 1 ) + 
+                 $3.c + "@" + "placeholder" + "@" + "!=" +
+                 lbl_true + "?" + $3.c + $3.valor_default + "=" + "^" +
                  lbl_fim_if + "#" +
-                 definicao_lbl_true + $3.valor_default +
+                 definicao_lbl_true + 
                  definicao_lbl_fim_if
                  ;
          }
@@ -155,16 +156,17 @@ PARAMs : PARAMs ',' PARAM
      | PARAM 
        { // a & a arguments @ 0 [@] = ^ 
          $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" + "[@]" + "=" + "^"; 
-         is_function_scope = true; 
+         is_function_scope = true;  
          if( $1.valor_default.size() > 0 ) {
            string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $$.c + $1.c + "@" + vector<string>{"undefined"} + "!=" +
-                 lbl_true + "?" +
+           $$.c = $$.c + declara_var( Var, "placeholder", 1, 1 ) + 
+                 $1.c + "@" + "placeholder" + "@" + "!=" +
+                 lbl_true + "?" + $1.c + $1.valor_default + "=" + "^" +
                  lbl_fim_if + "#" +
-                 definicao_lbl_true + $1.valor_default +
+                 definicao_lbl_true + 
                  definicao_lbl_fim_if
                  ;
          }
@@ -182,8 +184,8 @@ PARAM : ID
       { // Código do IF
         $$.c = $1.c;
         $$.contador = 1;
-        $$.valor_default = $3.c + "^";         
-        declara_var( Let, $1.c[0], $1.linha, $1.coluna ); 
+        $$.valor_default = $3.c;         
+        declara_var( Let, $1.c[0], $1.linha, $1.coluna );
       }
     ;
 
