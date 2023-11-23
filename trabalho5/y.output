@@ -1,0 +1,3113 @@
+Terminals unused in grammar
+
+   AND
+   OR
+
+
+State 22 conflicts: 1 shift/reduce
+State 144 conflicts: 1 shift/reduce
+State 148 conflicts: 14 shift/reduce
+State 149 conflicts: 14 shift/reduce
+
+
+Grammar
+
+    0 $accept: S $end
+
+    1 S: CMDs
+
+    2 CMDs: CMDs CMD
+    3     | %empty
+
+    4 CMD: CMD_LET ';'
+    5    | CMD_VAR ';'
+    6    | CMD_CONST ';'
+    7    | CMD_FOR
+    8    | CMD_IF
+    9    | CMD_WHILE
+   10    | CMD_FUNC
+   11    | RETURN E ';'
+   12    | E ASM ';'
+   13    | '{' EMPILHA_TS CMDs '}'
+   14    | E ';'
+   15    | ';'
+
+   16 EMPILHA_TS: %empty
+
+   17 $@1: %empty
+
+   18 CMD_FUNC: FUNCTION ID $@1 '(' EMPILHA_TS LISTA_PARAMs ')' '{' CMDs '}'
+
+   19 LISTA_PARAMs: PARAMs
+   20             | %empty
+
+   21 PARAMs: PARAMs ',' PARAM
+   22       | PARAM
+
+   23 PARAM: ID
+   24      | ID '=' E
+
+   25 CMD_FOR: FOR '(' PRIM_E ';' E ';' E ')' CMD
+
+   26 PRIM_E: CMD_LET
+   27       | CMD_VAR
+   28       | CMD_CONST
+   29       | E
+
+   30 CMD_IF: IF '(' E ')' CMD
+   31       | IF '(' E ')' CMD ELSE CMD
+
+   32 CMD_WHILE: WHILE '(' E ')' CMD
+
+   33 CMD_LET: LET LET_VARs
+
+   34 LET_VARs: LET_VAR ',' LET_VARs
+   35         | LET_VAR
+
+   36 LET_VAR: ID
+   37        | ID '=' E
+
+   38 CMD_VAR: VAR VAR_VARs
+
+   39 VAR_VARs: VAR_VAR ',' VAR_VARs
+   40         | VAR_VAR
+
+   41 VAR_VAR: ID
+   42        | ID '=' E
+
+   43 CMD_CONST: CONST CONST_VARs
+
+   44 CONST_VARs: CONST_VAR ',' CONST_VARs
+   45           | CONST_VAR
+
+   46 CONST_VAR: ID '=' E
+
+   47 E: ID '=' E
+   48  | ID MAIS_MAIS
+   49  | ID MAIS_IGUAL E
+   50  | LVALUEPROP '=' E
+   51  | LVALUEPROP MAIS_IGUAL E
+   52  | E ME_IG E
+   53  | E MA_IG E
+   54  | E IGUAL E
+   55  | E DIF E
+   56  | E '<' E
+   57  | E '>' E
+   58  | E '+' E
+   59  | E '-' E
+   60  | E '*' E
+   61  | E '/' E
+   62  | E '%' E
+   63  | '-' E
+   64  | E '(' LISTA_ARGs ')'
+   65  | '[' ']'
+   66  | '{' '}'
+   67  | ARRAY
+   68  | OBJ
+   69  | CDOUBLE
+   70  | CINT
+   71  | CSTRING
+   72  | BOOL
+   73  | ID
+   74  | LVALUEPROP
+   75  | '(' E ')'
+
+   76 $@2: %empty
+
+   77 E: ID EMPILHA_TS $@2 SETA E
+   78  | '(' LISTA_PARAMs PARENTESIS_FUNCAO SETA E
+
+   79 LISTA_ARGs: ARGs
+   80           | %empty
+
+   81 ARGs: ARGs ',' E
+   82     | E
+
+   83 LVALUEPROP: E '[' E ']'
+   84           | E '.' ID
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 62
+'(' (40) 18 25 30 31 32 64 75 78
+')' (41) 18 25 30 31 32 64 75
+'*' (42) 60
+'+' (43) 58
+',' (44) 21 34 39 44 81
+'-' (45) 59 63
+'.' (46) 84
+'/' (47) 61
+';' (59) 4 5 6 11 12 14 15 25
+'<' (60) 56
+'=' (61) 24 37 42 46 47 50
+'>' (62) 57
+'[' (91) 65 83
+']' (93) 65 83
+'{' (123) 13 18 66
+'}' (125) 13 18 66
+error (256)
+IF (258) 30 31
+ELSE (259) 31
+FOR (260) 25
+WHILE (261) 32
+LET (262) 33
+CONST (263) 43
+VAR (264) 38
+OBJ (265) 68
+ARRAY (266) 67
+FUNCTION (267) 18
+ASM (268) 12
+RETURN (269) 11
+ID (270) 18 23 24 36 37 41 42 46 47 48 49 73 77 84
+CDOUBLE (271) 69
+CSTRING (272) 71
+CINT (273) 70
+BOOL (274) 72
+SETA (275) 77 78
+PARENTESIS_FUNCAO (276) 78
+AND (277)
+OR (278)
+ME_IG (279) 52
+MA_IG (280) 53
+DIF (281) 55
+IGUAL (282) 54
+MAIS_IGUAL (283) 49 51
+MAIS_MAIS (284) 48
+
+
+Nonterminals, with rules where they appear
+
+$accept (47)
+    on left: 0
+S (48)
+    on left: 1, on right: 0
+CMDs (49)
+    on left: 2 3, on right: 1 2 13 18
+CMD (50)
+    on left: 4 5 6 7 8 9 10 11 12 13 14 15, on right: 2 25 30 31 32
+EMPILHA_TS (51)
+    on left: 16, on right: 13 18 77
+CMD_FUNC (52)
+    on left: 18, on right: 10
+$@1 (53)
+    on left: 17, on right: 18
+LISTA_PARAMs (54)
+    on left: 19 20, on right: 18 78
+PARAMs (55)
+    on left: 21 22, on right: 19 21
+PARAM (56)
+    on left: 23 24, on right: 21 22
+CMD_FOR (57)
+    on left: 25, on right: 7
+PRIM_E (58)
+    on left: 26 27 28 29, on right: 25
+CMD_IF (59)
+    on left: 30 31, on right: 8
+CMD_WHILE (60)
+    on left: 32, on right: 9
+CMD_LET (61)
+    on left: 33, on right: 4 26
+LET_VARs (62)
+    on left: 34 35, on right: 33 34
+LET_VAR (63)
+    on left: 36 37, on right: 34 35
+CMD_VAR (64)
+    on left: 38, on right: 5 27
+VAR_VARs (65)
+    on left: 39 40, on right: 38 39
+VAR_VAR (66)
+    on left: 41 42, on right: 39 40
+CMD_CONST (67)
+    on left: 43, on right: 6 28
+CONST_VARs (68)
+    on left: 44 45, on right: 43 44
+CONST_VAR (69)
+    on left: 46, on right: 44 45
+E (70)
+    on left: 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64
+    65 66 67 68 69 70 71 72 73 74 75 77 78, on right: 11 12 14 24 25
+    29 30 31 32 37 42 46 47 49 50 51 52 53 54 55 56 57 58 59 60 61
+    62 63 64 75 77 78 81 82 83 84
+$@2 (71)
+    on left: 76, on right: 77
+LISTA_ARGs (72)
+    on left: 79 80, on right: 64
+ARGs (73)
+    on left: 81 82, on right: 79 81
+LVALUEPROP (74)
+    on left: 83 84, on right: 50 51 74
+
+
+State 0
+
+    0 $accept: . S $end
+
+    $default  reduce using rule 3 (CMDs)
+
+    S     go to state 1
+    CMDs  go to state 2
+
+
+State 1
+
+    0 $accept: S . $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    1 S: CMDs .
+    2 CMDs: CMDs . CMD
+
+    IF        shift, and go to state 4
+    FOR       shift, and go to state 5
+    WHILE     shift, and go to state 6
+    LET       shift, and go to state 7
+    CONST     shift, and go to state 8
+    VAR       shift, and go to state 9
+    OBJ       shift, and go to state 10
+    ARRAY     shift, and go to state 11
+    FUNCTION  shift, and go to state 12
+    RETURN    shift, and go to state 13
+    ID        shift, and go to state 14
+    CDOUBLE   shift, and go to state 15
+    CSTRING   shift, and go to state 16
+    CINT      shift, and go to state 17
+    BOOL      shift, and go to state 18
+    '-'       shift, and go to state 19
+    '['       shift, and go to state 20
+    '('       shift, and go to state 21
+    '{'       shift, and go to state 22
+    ';'       shift, and go to state 23
+
+    $default  reduce using rule 1 (S)
+
+    CMD         go to state 24
+    CMD_FUNC    go to state 25
+    CMD_FOR     go to state 26
+    CMD_IF      go to state 27
+    CMD_WHILE   go to state 28
+    CMD_LET     go to state 29
+    CMD_VAR     go to state 30
+    CMD_CONST   go to state 31
+    E           go to state 32
+    LVALUEPROP  go to state 33
+
+
+State 3
+
+    0 $accept: S $end .
+
+    $default  accept
+
+
+State 4
+
+   30 CMD_IF: IF . '(' E ')' CMD
+   31       | IF . '(' E ')' CMD ELSE CMD
+
+    '('  shift, and go to state 34
+
+
+State 5
+
+   25 CMD_FOR: FOR . '(' PRIM_E ';' E ';' E ')' CMD
+
+    '('  shift, and go to state 35
+
+
+State 6
+
+   32 CMD_WHILE: WHILE . '(' E ')' CMD
+
+    '('  shift, and go to state 36
+
+
+State 7
+
+   33 CMD_LET: LET . LET_VARs
+
+    ID  shift, and go to state 37
+
+    LET_VARs  go to state 38
+    LET_VAR   go to state 39
+
+
+State 8
+
+   43 CMD_CONST: CONST . CONST_VARs
+
+    ID  shift, and go to state 40
+
+    CONST_VARs  go to state 41
+    CONST_VAR   go to state 42
+
+
+State 9
+
+   38 CMD_VAR: VAR . VAR_VARs
+
+    ID  shift, and go to state 43
+
+    VAR_VARs  go to state 44
+    VAR_VAR   go to state 45
+
+
+State 10
+
+   68 E: OBJ .
+
+    $default  reduce using rule 68 (E)
+
+
+State 11
+
+   67 E: ARRAY .
+
+    $default  reduce using rule 67 (E)
+
+
+State 12
+
+   18 CMD_FUNC: FUNCTION . ID $@1 '(' EMPILHA_TS LISTA_PARAMs ')' '{' CMDs '}'
+
+    ID  shift, and go to state 46
+
+
+State 13
+
+   11 CMD: RETURN . E ';'
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 48
+    LVALUEPROP  go to state 33
+
+
+State 14
+
+   47 E: ID . '=' E
+   48  | ID . MAIS_MAIS
+   49  | ID . MAIS_IGUAL E
+   73  | ID .
+   77  | ID . EMPILHA_TS $@2 SETA E
+
+    MAIS_IGUAL  shift, and go to state 49
+    MAIS_MAIS   shift, and go to state 50
+    '='         shift, and go to state 51
+
+    SETA      reduce using rule 16 (EMPILHA_TS)
+    $default  reduce using rule 73 (E)
+
+    EMPILHA_TS  go to state 52
+
+
+State 15
+
+   69 E: CDOUBLE .
+
+    $default  reduce using rule 69 (E)
+
+
+State 16
+
+   71 E: CSTRING .
+
+    $default  reduce using rule 71 (E)
+
+
+State 17
+
+   70 E: CINT .
+
+    $default  reduce using rule 70 (E)
+
+
+State 18
+
+   72 E: BOOL .
+
+    $default  reduce using rule 72 (E)
+
+
+State 19
+
+   63 E: '-' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 53
+    LVALUEPROP  go to state 33
+
+
+State 20
+
+   65 E: '[' . ']'
+
+    ']'  shift, and go to state 54
+
+
+State 21
+
+   75 E: '(' . E ')'
+   78  | '(' . LISTA_PARAMs PARENTESIS_FUNCAO SETA E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 55
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    $default  reduce using rule 20 (LISTA_PARAMs)
+
+    LISTA_PARAMs  go to state 56
+    PARAMs        go to state 57
+    PARAM         go to state 58
+    E             go to state 59
+    LVALUEPROP    go to state 33
+
+
+State 22
+
+   13 CMD: '{' . EMPILHA_TS CMDs '}'
+   66 E: '{' . '}'
+
+    '}'  shift, and go to state 60
+
+    '}'       [reduce using rule 16 (EMPILHA_TS)]
+    $default  reduce using rule 16 (EMPILHA_TS)
+
+    EMPILHA_TS  go to state 61
+
+
+State 23
+
+   15 CMD: ';' .
+
+    $default  reduce using rule 15 (CMD)
+
+
+State 24
+
+    2 CMDs: CMDs CMD .
+
+    $default  reduce using rule 2 (CMDs)
+
+
+State 25
+
+   10 CMD: CMD_FUNC .
+
+    $default  reduce using rule 10 (CMD)
+
+
+State 26
+
+    7 CMD: CMD_FOR .
+
+    $default  reduce using rule 7 (CMD)
+
+
+State 27
+
+    8 CMD: CMD_IF .
+
+    $default  reduce using rule 8 (CMD)
+
+
+State 28
+
+    9 CMD: CMD_WHILE .
+
+    $default  reduce using rule 9 (CMD)
+
+
+State 29
+
+    4 CMD: CMD_LET . ';'
+
+    ';'  shift, and go to state 62
+
+
+State 30
+
+    5 CMD: CMD_VAR . ';'
+
+    ';'  shift, and go to state 63
+
+
+State 31
+
+    6 CMD: CMD_CONST . ';'
+
+    ';'  shift, and go to state 64
+
+
+State 32
+
+   12 CMD: E . ASM ';'
+   14    | E . ';'
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ASM    shift, and go to state 65
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ';'    shift, and go to state 80
+
+
+State 33
+
+   50 E: LVALUEPROP . '=' E
+   51  | LVALUEPROP . MAIS_IGUAL E
+   74  | LVALUEPROP .
+
+    MAIS_IGUAL  shift, and go to state 81
+    '='         shift, and go to state 82
+
+    $default  reduce using rule 74 (E)
+
+
+State 34
+
+   30 CMD_IF: IF '(' . E ')' CMD
+   31       | IF '(' . E ')' CMD ELSE CMD
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 83
+    LVALUEPROP  go to state 33
+
+
+State 35
+
+   25 CMD_FOR: FOR '(' . PRIM_E ';' E ';' E ')' CMD
+
+    LET      shift, and go to state 7
+    CONST    shift, and go to state 8
+    VAR      shift, and go to state 9
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    PRIM_E      go to state 84
+    CMD_LET     go to state 85
+    CMD_VAR     go to state 86
+    CMD_CONST   go to state 87
+    E           go to state 88
+    LVALUEPROP  go to state 33
+
+
+State 36
+
+   32 CMD_WHILE: WHILE '(' . E ')' CMD
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 89
+    LVALUEPROP  go to state 33
+
+
+State 37
+
+   36 LET_VAR: ID .
+   37        | ID . '=' E
+
+    '='  shift, and go to state 90
+
+    $default  reduce using rule 36 (LET_VAR)
+
+
+State 38
+
+   33 CMD_LET: LET LET_VARs .
+
+    $default  reduce using rule 33 (CMD_LET)
+
+
+State 39
+
+   34 LET_VARs: LET_VAR . ',' LET_VARs
+   35         | LET_VAR .
+
+    ','  shift, and go to state 91
+
+    $default  reduce using rule 35 (LET_VARs)
+
+
+State 40
+
+   46 CONST_VAR: ID . '=' E
+
+    '='  shift, and go to state 92
+
+
+State 41
+
+   43 CMD_CONST: CONST CONST_VARs .
+
+    $default  reduce using rule 43 (CMD_CONST)
+
+
+State 42
+
+   44 CONST_VARs: CONST_VAR . ',' CONST_VARs
+   45           | CONST_VAR .
+
+    ','  shift, and go to state 93
+
+    $default  reduce using rule 45 (CONST_VARs)
+
+
+State 43
+
+   41 VAR_VAR: ID .
+   42        | ID . '=' E
+
+    '='  shift, and go to state 94
+
+    $default  reduce using rule 41 (VAR_VAR)
+
+
+State 44
+
+   38 CMD_VAR: VAR VAR_VARs .
+
+    $default  reduce using rule 38 (CMD_VAR)
+
+
+State 45
+
+   39 VAR_VARs: VAR_VAR . ',' VAR_VARs
+   40         | VAR_VAR .
+
+    ','  shift, and go to state 95
+
+    $default  reduce using rule 40 (VAR_VARs)
+
+
+State 46
+
+   18 CMD_FUNC: FUNCTION ID . $@1 '(' EMPILHA_TS LISTA_PARAMs ')' '{' CMDs '}'
+
+    $default  reduce using rule 17 ($@1)
+
+    $@1  go to state 96
+
+
+State 47
+
+   66 E: '{' . '}'
+
+    '}'  shift, and go to state 60
+
+
+State 48
+
+   11 CMD: RETURN E . ';'
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ';'    shift, and go to state 97
+
+
+State 49
+
+   49 E: ID MAIS_IGUAL . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 98
+    LVALUEPROP  go to state 33
+
+
+State 50
+
+   48 E: ID MAIS_MAIS .
+
+    $default  reduce using rule 48 (E)
+
+
+State 51
+
+   47 E: ID '=' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 99
+    LVALUEPROP  go to state 33
+
+
+State 52
+
+   77 E: ID EMPILHA_TS . $@2 SETA E
+
+    $default  reduce using rule 76 ($@2)
+
+    $@2  go to state 100
+
+
+State 53
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   63  | '-' E .
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    $default  reduce using rule 63 (E)
+
+
+State 54
+
+   65 E: '[' ']' .
+
+    $default  reduce using rule 65 (E)
+
+
+State 55
+
+   23 PARAM: ID .
+   24      | ID . '=' E
+   47 E: ID . '=' E
+   48  | ID . MAIS_MAIS
+   49  | ID . MAIS_IGUAL E
+   73  | ID .
+   77  | ID . EMPILHA_TS $@2 SETA E
+
+    MAIS_IGUAL  shift, and go to state 49
+    MAIS_MAIS   shift, and go to state 50
+    '='         shift, and go to state 101
+
+    SETA               reduce using rule 16 (EMPILHA_TS)
+    PARENTESIS_FUNCAO  reduce using rule 23 (PARAM)
+    ','                reduce using rule 23 (PARAM)
+    $default           reduce using rule 73 (E)
+
+    EMPILHA_TS  go to state 52
+
+
+State 56
+
+   78 E: '(' LISTA_PARAMs . PARENTESIS_FUNCAO SETA E
+
+    PARENTESIS_FUNCAO  shift, and go to state 102
+
+
+State 57
+
+   19 LISTA_PARAMs: PARAMs .
+   21 PARAMs: PARAMs . ',' PARAM
+
+    ','  shift, and go to state 103
+
+    $default  reduce using rule 19 (LISTA_PARAMs)
+
+
+State 58
+
+   22 PARAMs: PARAM .
+
+    $default  reduce using rule 22 (PARAMs)
+
+
+State 59
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   75  | '(' E . ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ')'    shift, and go to state 104
+
+
+State 60
+
+   66 E: '{' '}' .
+
+    $default  reduce using rule 66 (E)
+
+
+State 61
+
+   13 CMD: '{' EMPILHA_TS . CMDs '}'
+
+    $default  reduce using rule 3 (CMDs)
+
+    CMDs  go to state 105
+
+
+State 62
+
+    4 CMD: CMD_LET ';' .
+
+    $default  reduce using rule 4 (CMD)
+
+
+State 63
+
+    5 CMD: CMD_VAR ';' .
+
+    $default  reduce using rule 5 (CMD)
+
+
+State 64
+
+    6 CMD: CMD_CONST ';' .
+
+    $default  reduce using rule 6 (CMD)
+
+
+State 65
+
+   12 CMD: E ASM . ';'
+
+    ';'  shift, and go to state 106
+
+
+State 66
+
+   52 E: E ME_IG . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 107
+    LVALUEPROP  go to state 33
+
+
+State 67
+
+   53 E: E MA_IG . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 108
+    LVALUEPROP  go to state 33
+
+
+State 68
+
+   55 E: E DIF . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 109
+    LVALUEPROP  go to state 33
+
+
+State 69
+
+   54 E: E IGUAL . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 110
+    LVALUEPROP  go to state 33
+
+
+State 70
+
+   56 E: E '<' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 111
+    LVALUEPROP  go to state 33
+
+
+State 71
+
+   57 E: E '>' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 112
+    LVALUEPROP  go to state 33
+
+
+State 72
+
+   58 E: E '+' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 113
+    LVALUEPROP  go to state 33
+
+
+State 73
+
+   59 E: E '-' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 114
+    LVALUEPROP  go to state 33
+
+
+State 74
+
+   60 E: E '*' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 115
+    LVALUEPROP  go to state 33
+
+
+State 75
+
+   61 E: E '/' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 116
+    LVALUEPROP  go to state 33
+
+
+State 76
+
+   62 E: E '%' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 117
+    LVALUEPROP  go to state 33
+
+
+State 77
+
+   83 LVALUEPROP: E '[' . E ']'
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 118
+    LVALUEPROP  go to state 33
+
+
+State 78
+
+   64 E: E '(' . LISTA_ARGs ')'
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    $default  reduce using rule 80 (LISTA_ARGs)
+
+    E           go to state 119
+    LISTA_ARGs  go to state 120
+    ARGs        go to state 121
+    LVALUEPROP  go to state 33
+
+
+State 79
+
+   84 LVALUEPROP: E '.' . ID
+
+    ID  shift, and go to state 122
+
+
+State 80
+
+   14 CMD: E ';' .
+
+    $default  reduce using rule 14 (CMD)
+
+
+State 81
+
+   51 E: LVALUEPROP MAIS_IGUAL . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 123
+    LVALUEPROP  go to state 33
+
+
+State 82
+
+   50 E: LVALUEPROP '=' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 124
+    LVALUEPROP  go to state 33
+
+
+State 83
+
+   30 CMD_IF: IF '(' E . ')' CMD
+   31       | IF '(' E . ')' CMD ELSE CMD
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ')'    shift, and go to state 125
+
+
+State 84
+
+   25 CMD_FOR: FOR '(' PRIM_E . ';' E ';' E ')' CMD
+
+    ';'  shift, and go to state 126
+
+
+State 85
+
+   26 PRIM_E: CMD_LET .
+
+    $default  reduce using rule 26 (PRIM_E)
+
+
+State 86
+
+   27 PRIM_E: CMD_VAR .
+
+    $default  reduce using rule 27 (PRIM_E)
+
+
+State 87
+
+   28 PRIM_E: CMD_CONST .
+
+    $default  reduce using rule 28 (PRIM_E)
+
+
+State 88
+
+   29 PRIM_E: E .
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 29 (PRIM_E)
+
+
+State 89
+
+   32 CMD_WHILE: WHILE '(' E . ')' CMD
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ')'    shift, and go to state 127
+
+
+State 90
+
+   37 LET_VAR: ID '=' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 128
+    LVALUEPROP  go to state 33
+
+
+State 91
+
+   34 LET_VARs: LET_VAR ',' . LET_VARs
+
+    ID  shift, and go to state 37
+
+    LET_VARs  go to state 129
+    LET_VAR   go to state 39
+
+
+State 92
+
+   46 CONST_VAR: ID '=' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 130
+    LVALUEPROP  go to state 33
+
+
+State 93
+
+   44 CONST_VARs: CONST_VAR ',' . CONST_VARs
+
+    ID  shift, and go to state 40
+
+    CONST_VARs  go to state 131
+    CONST_VAR   go to state 42
+
+
+State 94
+
+   42 VAR_VAR: ID '=' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 132
+    LVALUEPROP  go to state 33
+
+
+State 95
+
+   39 VAR_VARs: VAR_VAR ',' . VAR_VARs
+
+    ID  shift, and go to state 43
+
+    VAR_VARs  go to state 133
+    VAR_VAR   go to state 45
+
+
+State 96
+
+   18 CMD_FUNC: FUNCTION ID $@1 . '(' EMPILHA_TS LISTA_PARAMs ')' '{' CMDs '}'
+
+    '('  shift, and go to state 134
+
+
+State 97
+
+   11 CMD: RETURN E ';' .
+
+    $default  reduce using rule 11 (CMD)
+
+
+State 98
+
+   49 E: ID MAIS_IGUAL E .
+   52  | E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '<'  shift, and go to state 70
+    '>'  shift, and go to state 71
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    ME_IG  error (nonassociative)
+    MA_IG  error (nonassociative)
+    DIF    error (nonassociative)
+    IGUAL  error (nonassociative)
+
+    $default  reduce using rule 49 (E)
+
+
+State 99
+
+   47 E: ID '=' E .
+   52  | E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 47 (E)
+
+
+State 100
+
+   77 E: ID EMPILHA_TS $@2 . SETA E
+
+    SETA  shift, and go to state 135
+
+
+State 101
+
+   24 PARAM: ID '=' . E
+   47 E: ID '=' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 136
+    LVALUEPROP  go to state 33
+
+
+State 102
+
+   78 E: '(' LISTA_PARAMs PARENTESIS_FUNCAO . SETA E
+
+    SETA  shift, and go to state 137
+
+
+State 103
+
+   21 PARAMs: PARAMs ',' . PARAM
+
+    ID  shift, and go to state 138
+
+    PARAM  go to state 139
+
+
+State 104
+
+   75 E: '(' E ')' .
+
+    $default  reduce using rule 75 (E)
+
+
+State 105
+
+    2 CMDs: CMDs . CMD
+   13 CMD: '{' EMPILHA_TS CMDs . '}'
+
+    IF        shift, and go to state 4
+    FOR       shift, and go to state 5
+    WHILE     shift, and go to state 6
+    LET       shift, and go to state 7
+    CONST     shift, and go to state 8
+    VAR       shift, and go to state 9
+    OBJ       shift, and go to state 10
+    ARRAY     shift, and go to state 11
+    FUNCTION  shift, and go to state 12
+    RETURN    shift, and go to state 13
+    ID        shift, and go to state 14
+    CDOUBLE   shift, and go to state 15
+    CSTRING   shift, and go to state 16
+    CINT      shift, and go to state 17
+    BOOL      shift, and go to state 18
+    '-'       shift, and go to state 19
+    '['       shift, and go to state 20
+    '('       shift, and go to state 21
+    '{'       shift, and go to state 22
+    ';'       shift, and go to state 23
+    '}'       shift, and go to state 140
+
+    CMD         go to state 24
+    CMD_FUNC    go to state 25
+    CMD_FOR     go to state 26
+    CMD_IF      go to state 27
+    CMD_WHILE   go to state 28
+    CMD_LET     go to state 29
+    CMD_VAR     go to state 30
+    CMD_CONST   go to state 31
+    E           go to state 32
+    LVALUEPROP  go to state 33
+
+
+State 106
+
+   12 CMD: E ASM ';' .
+
+    $default  reduce using rule 12 (CMD)
+
+
+State 107
+
+   52 E: E . ME_IG E
+   52  | E ME_IG E .
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '<'  shift, and go to state 70
+    '>'  shift, and go to state 71
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    ME_IG  error (nonassociative)
+    MA_IG  error (nonassociative)
+    DIF    error (nonassociative)
+    IGUAL  error (nonassociative)
+
+    $default  reduce using rule 52 (E)
+
+
+State 108
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   53  | E MA_IG E .
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '<'  shift, and go to state 70
+    '>'  shift, and go to state 71
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    ME_IG  error (nonassociative)
+    MA_IG  error (nonassociative)
+    DIF    error (nonassociative)
+    IGUAL  error (nonassociative)
+
+    $default  reduce using rule 53 (E)
+
+
+State 109
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   55  | E DIF E .
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '<'  shift, and go to state 70
+    '>'  shift, and go to state 71
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    ME_IG  error (nonassociative)
+    MA_IG  error (nonassociative)
+    DIF    error (nonassociative)
+    IGUAL  error (nonassociative)
+
+    $default  reduce using rule 55 (E)
+
+
+State 110
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   54  | E IGUAL E .
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '<'  shift, and go to state 70
+    '>'  shift, and go to state 71
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    ME_IG  error (nonassociative)
+    MA_IG  error (nonassociative)
+    DIF    error (nonassociative)
+    IGUAL  error (nonassociative)
+
+    $default  reduce using rule 54 (E)
+
+
+State 111
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   56  | E '<' E .
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    '<'  error (nonassociative)
+    '>'  error (nonassociative)
+
+    $default  reduce using rule 56 (E)
+
+
+State 112
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   57  | E '>' E .
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    '<'  error (nonassociative)
+    '>'  error (nonassociative)
+
+    $default  reduce using rule 57 (E)
+
+
+State 113
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   58  | E '+' E .
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    $default  reduce using rule 58 (E)
+
+
+State 114
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   59  | E '-' E .
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    $default  reduce using rule 59 (E)
+
+
+State 115
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   60  | E '*' E .
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    $default  reduce using rule 60 (E)
+
+
+State 116
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   61  | E '/' E .
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    $default  reduce using rule 61 (E)
+
+
+State 117
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   62  | E '%' E .
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    $default  reduce using rule 62 (E)
+
+
+State 118
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   83           | E '[' E . ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ']'    shift, and go to state 141
+
+
+State 119
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   82 ARGs: E .
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 82 (ARGs)
+
+
+State 120
+
+   64 E: E '(' LISTA_ARGs . ')'
+
+    ')'  shift, and go to state 142
+
+
+State 121
+
+   79 LISTA_ARGs: ARGs .
+   81 ARGs: ARGs . ',' E
+
+    ','  shift, and go to state 143
+
+    $default  reduce using rule 79 (LISTA_ARGs)
+
+
+State 122
+
+   84 LVALUEPROP: E '.' ID .
+
+    $default  reduce using rule 84 (LVALUEPROP)
+
+
+State 123
+
+   51 E: LVALUEPROP MAIS_IGUAL E .
+   52  | E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    '<'  shift, and go to state 70
+    '>'  shift, and go to state 71
+    '+'  shift, and go to state 72
+    '-'  shift, and go to state 73
+    '*'  shift, and go to state 74
+    '/'  shift, and go to state 75
+    '%'  shift, and go to state 76
+    '['  shift, and go to state 77
+    '('  shift, and go to state 78
+    '.'  shift, and go to state 79
+
+    ME_IG  error (nonassociative)
+    MA_IG  error (nonassociative)
+    DIF    error (nonassociative)
+    IGUAL  error (nonassociative)
+
+    $default  reduce using rule 51 (E)
+
+
+State 124
+
+   50 E: LVALUEPROP '=' E .
+   52  | E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 50 (E)
+
+
+State 125
+
+   30 CMD_IF: IF '(' E ')' . CMD
+   31       | IF '(' E ')' . CMD ELSE CMD
+
+    IF        shift, and go to state 4
+    FOR       shift, and go to state 5
+    WHILE     shift, and go to state 6
+    LET       shift, and go to state 7
+    CONST     shift, and go to state 8
+    VAR       shift, and go to state 9
+    OBJ       shift, and go to state 10
+    ARRAY     shift, and go to state 11
+    FUNCTION  shift, and go to state 12
+    RETURN    shift, and go to state 13
+    ID        shift, and go to state 14
+    CDOUBLE   shift, and go to state 15
+    CSTRING   shift, and go to state 16
+    CINT      shift, and go to state 17
+    BOOL      shift, and go to state 18
+    '-'       shift, and go to state 19
+    '['       shift, and go to state 20
+    '('       shift, and go to state 21
+    '{'       shift, and go to state 22
+    ';'       shift, and go to state 23
+
+    CMD         go to state 144
+    CMD_FUNC    go to state 25
+    CMD_FOR     go to state 26
+    CMD_IF      go to state 27
+    CMD_WHILE   go to state 28
+    CMD_LET     go to state 29
+    CMD_VAR     go to state 30
+    CMD_CONST   go to state 31
+    E           go to state 32
+    LVALUEPROP  go to state 33
+
+
+State 126
+
+   25 CMD_FOR: FOR '(' PRIM_E ';' . E ';' E ')' CMD
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 145
+    LVALUEPROP  go to state 33
+
+
+State 127
+
+   32 CMD_WHILE: WHILE '(' E ')' . CMD
+
+    IF        shift, and go to state 4
+    FOR       shift, and go to state 5
+    WHILE     shift, and go to state 6
+    LET       shift, and go to state 7
+    CONST     shift, and go to state 8
+    VAR       shift, and go to state 9
+    OBJ       shift, and go to state 10
+    ARRAY     shift, and go to state 11
+    FUNCTION  shift, and go to state 12
+    RETURN    shift, and go to state 13
+    ID        shift, and go to state 14
+    CDOUBLE   shift, and go to state 15
+    CSTRING   shift, and go to state 16
+    CINT      shift, and go to state 17
+    BOOL      shift, and go to state 18
+    '-'       shift, and go to state 19
+    '['       shift, and go to state 20
+    '('       shift, and go to state 21
+    '{'       shift, and go to state 22
+    ';'       shift, and go to state 23
+
+    CMD         go to state 146
+    CMD_FUNC    go to state 25
+    CMD_FOR     go to state 26
+    CMD_IF      go to state 27
+    CMD_WHILE   go to state 28
+    CMD_LET     go to state 29
+    CMD_VAR     go to state 30
+    CMD_CONST   go to state 31
+    E           go to state 32
+    LVALUEPROP  go to state 33
+
+
+State 128
+
+   37 LET_VAR: ID '=' E .
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 37 (LET_VAR)
+
+
+State 129
+
+   34 LET_VARs: LET_VAR ',' LET_VARs .
+
+    $default  reduce using rule 34 (LET_VARs)
+
+
+State 130
+
+   46 CONST_VAR: ID '=' E .
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 46 (CONST_VAR)
+
+
+State 131
+
+   44 CONST_VARs: CONST_VAR ',' CONST_VARs .
+
+    $default  reduce using rule 44 (CONST_VARs)
+
+
+State 132
+
+   42 VAR_VAR: ID '=' E .
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 42 (VAR_VAR)
+
+
+State 133
+
+   39 VAR_VARs: VAR_VAR ',' VAR_VARs .
+
+    $default  reduce using rule 39 (VAR_VARs)
+
+
+State 134
+
+   18 CMD_FUNC: FUNCTION ID $@1 '(' . EMPILHA_TS LISTA_PARAMs ')' '{' CMDs '}'
+
+    $default  reduce using rule 16 (EMPILHA_TS)
+
+    EMPILHA_TS  go to state 147
+
+
+State 135
+
+   77 E: ID EMPILHA_TS $@2 SETA . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 148
+    LVALUEPROP  go to state 33
+
+
+State 136
+
+   24 PARAM: ID '=' E .
+   47 E: ID '=' E .
+   52  | E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    ')'       reduce using rule 47 (E)
+    $default  reduce using rule 24 (PARAM)
+
+
+State 137
+
+   78 E: '(' LISTA_PARAMs PARENTESIS_FUNCAO SETA . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 149
+    LVALUEPROP  go to state 33
+
+
+State 138
+
+   23 PARAM: ID .
+   24      | ID . '=' E
+
+    '='  shift, and go to state 150
+
+    $default  reduce using rule 23 (PARAM)
+
+
+State 139
+
+   21 PARAMs: PARAMs ',' PARAM .
+
+    $default  reduce using rule 21 (PARAMs)
+
+
+State 140
+
+   13 CMD: '{' EMPILHA_TS CMDs '}' .
+
+    $default  reduce using rule 13 (CMD)
+
+
+State 141
+
+   83 LVALUEPROP: E '[' E ']' .
+
+    $default  reduce using rule 83 (LVALUEPROP)
+
+
+State 142
+
+   64 E: E '(' LISTA_ARGs ')' .
+
+    $default  reduce using rule 64 (E)
+
+
+State 143
+
+   81 ARGs: ARGs ',' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 151
+    LVALUEPROP  go to state 33
+
+
+State 144
+
+   30 CMD_IF: IF '(' E ')' CMD .
+   31       | IF '(' E ')' CMD . ELSE CMD
+
+    ELSE  shift, and go to state 152
+
+    ELSE      [reduce using rule 30 (CMD_IF)]
+    $default  reduce using rule 30 (CMD_IF)
+
+
+State 145
+
+   25 CMD_FOR: FOR '(' PRIM_E ';' E . ';' E ')' CMD
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ';'    shift, and go to state 153
+
+
+State 146
+
+   32 CMD_WHILE: WHILE '(' E ')' CMD .
+
+    $default  reduce using rule 32 (CMD_WHILE)
+
+
+State 147
+
+   18 CMD_FUNC: FUNCTION ID $@1 '(' EMPILHA_TS . LISTA_PARAMs ')' '{' CMDs '}'
+
+    ID  shift, and go to state 138
+
+    $default  reduce using rule 20 (LISTA_PARAMs)
+
+    LISTA_PARAMs  go to state 154
+    PARAMs        go to state 57
+    PARAM         go to state 58
+
+
+State 148
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   77  | ID EMPILHA_TS $@2 SETA E .
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    ME_IG     [reduce using rule 77 (E)]
+    MA_IG     [reduce using rule 77 (E)]
+    DIF       [reduce using rule 77 (E)]
+    IGUAL     [reduce using rule 77 (E)]
+    '<'       [reduce using rule 77 (E)]
+    '>'       [reduce using rule 77 (E)]
+    '+'       [reduce using rule 77 (E)]
+    '-'       [reduce using rule 77 (E)]
+    '*'       [reduce using rule 77 (E)]
+    '/'       [reduce using rule 77 (E)]
+    '%'       [reduce using rule 77 (E)]
+    '['       [reduce using rule 77 (E)]
+    '('       [reduce using rule 77 (E)]
+    '.'       [reduce using rule 77 (E)]
+    $default  reduce using rule 77 (E)
+
+
+State 149
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   78  | '(' LISTA_PARAMs PARENTESIS_FUNCAO SETA E .
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    ME_IG     [reduce using rule 78 (E)]
+    MA_IG     [reduce using rule 78 (E)]
+    DIF       [reduce using rule 78 (E)]
+    IGUAL     [reduce using rule 78 (E)]
+    '<'       [reduce using rule 78 (E)]
+    '>'       [reduce using rule 78 (E)]
+    '+'       [reduce using rule 78 (E)]
+    '-'       [reduce using rule 78 (E)]
+    '*'       [reduce using rule 78 (E)]
+    '/'       [reduce using rule 78 (E)]
+    '%'       [reduce using rule 78 (E)]
+    '['       [reduce using rule 78 (E)]
+    '('       [reduce using rule 78 (E)]
+    '.'       [reduce using rule 78 (E)]
+    $default  reduce using rule 78 (E)
+
+
+State 150
+
+   24 PARAM: ID '=' . E
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 155
+    LVALUEPROP  go to state 33
+
+
+State 151
+
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   81 ARGs: ARGs ',' E .
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 81 (ARGs)
+
+
+State 152
+
+   31 CMD_IF: IF '(' E ')' CMD ELSE . CMD
+
+    IF        shift, and go to state 4
+    FOR       shift, and go to state 5
+    WHILE     shift, and go to state 6
+    LET       shift, and go to state 7
+    CONST     shift, and go to state 8
+    VAR       shift, and go to state 9
+    OBJ       shift, and go to state 10
+    ARRAY     shift, and go to state 11
+    FUNCTION  shift, and go to state 12
+    RETURN    shift, and go to state 13
+    ID        shift, and go to state 14
+    CDOUBLE   shift, and go to state 15
+    CSTRING   shift, and go to state 16
+    CINT      shift, and go to state 17
+    BOOL      shift, and go to state 18
+    '-'       shift, and go to state 19
+    '['       shift, and go to state 20
+    '('       shift, and go to state 21
+    '{'       shift, and go to state 22
+    ';'       shift, and go to state 23
+
+    CMD         go to state 156
+    CMD_FUNC    go to state 25
+    CMD_FOR     go to state 26
+    CMD_IF      go to state 27
+    CMD_WHILE   go to state 28
+    CMD_LET     go to state 29
+    CMD_VAR     go to state 30
+    CMD_CONST   go to state 31
+    E           go to state 32
+    LVALUEPROP  go to state 33
+
+
+State 153
+
+   25 CMD_FOR: FOR '(' PRIM_E ';' E ';' . E ')' CMD
+
+    OBJ      shift, and go to state 10
+    ARRAY    shift, and go to state 11
+    ID       shift, and go to state 14
+    CDOUBLE  shift, and go to state 15
+    CSTRING  shift, and go to state 16
+    CINT     shift, and go to state 17
+    BOOL     shift, and go to state 18
+    '-'      shift, and go to state 19
+    '['      shift, and go to state 20
+    '('      shift, and go to state 21
+    '{'      shift, and go to state 47
+
+    E           go to state 157
+    LVALUEPROP  go to state 33
+
+
+State 154
+
+   18 CMD_FUNC: FUNCTION ID $@1 '(' EMPILHA_TS LISTA_PARAMs . ')' '{' CMDs '}'
+
+    ')'  shift, and go to state 158
+
+
+State 155
+
+   24 PARAM: ID '=' E .
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+
+    $default  reduce using rule 24 (PARAM)
+
+
+State 156
+
+   31 CMD_IF: IF '(' E ')' CMD ELSE CMD .
+
+    $default  reduce using rule 31 (CMD_IF)
+
+
+State 157
+
+   25 CMD_FOR: FOR '(' PRIM_E ';' E ';' E . ')' CMD
+   52 E: E . ME_IG E
+   53  | E . MA_IG E
+   54  | E . IGUAL E
+   55  | E . DIF E
+   56  | E . '<' E
+   57  | E . '>' E
+   58  | E . '+' E
+   59  | E . '-' E
+   60  | E . '*' E
+   61  | E . '/' E
+   62  | E . '%' E
+   64  | E . '(' LISTA_ARGs ')'
+   83 LVALUEPROP: E . '[' E ']'
+   84           | E . '.' ID
+
+    ME_IG  shift, and go to state 66
+    MA_IG  shift, and go to state 67
+    DIF    shift, and go to state 68
+    IGUAL  shift, and go to state 69
+    '<'    shift, and go to state 70
+    '>'    shift, and go to state 71
+    '+'    shift, and go to state 72
+    '-'    shift, and go to state 73
+    '*'    shift, and go to state 74
+    '/'    shift, and go to state 75
+    '%'    shift, and go to state 76
+    '['    shift, and go to state 77
+    '('    shift, and go to state 78
+    '.'    shift, and go to state 79
+    ')'    shift, and go to state 159
+
+
+State 158
+
+   18 CMD_FUNC: FUNCTION ID $@1 '(' EMPILHA_TS LISTA_PARAMs ')' . '{' CMDs '}'
+
+    '{'  shift, and go to state 160
+
+
+State 159
+
+   25 CMD_FOR: FOR '(' PRIM_E ';' E ';' E ')' . CMD
+
+    IF        shift, and go to state 4
+    FOR       shift, and go to state 5
+    WHILE     shift, and go to state 6
+    LET       shift, and go to state 7
+    CONST     shift, and go to state 8
+    VAR       shift, and go to state 9
+    OBJ       shift, and go to state 10
+    ARRAY     shift, and go to state 11
+    FUNCTION  shift, and go to state 12
+    RETURN    shift, and go to state 13
+    ID        shift, and go to state 14
+    CDOUBLE   shift, and go to state 15
+    CSTRING   shift, and go to state 16
+    CINT      shift, and go to state 17
+    BOOL      shift, and go to state 18
+    '-'       shift, and go to state 19
+    '['       shift, and go to state 20
+    '('       shift, and go to state 21
+    '{'       shift, and go to state 22
+    ';'       shift, and go to state 23
+
+    CMD         go to state 161
+    CMD_FUNC    go to state 25
+    CMD_FOR     go to state 26
+    CMD_IF      go to state 27
+    CMD_WHILE   go to state 28
+    CMD_LET     go to state 29
+    CMD_VAR     go to state 30
+    CMD_CONST   go to state 31
+    E           go to state 32
+    LVALUEPROP  go to state 33
+
+
+State 160
+
+   18 CMD_FUNC: FUNCTION ID $@1 '(' EMPILHA_TS LISTA_PARAMs ')' '{' . CMDs '}'
+
+    $default  reduce using rule 3 (CMDs)
+
+    CMDs  go to state 162
+
+
+State 161
+
+   25 CMD_FOR: FOR '(' PRIM_E ';' E ';' E ')' CMD .
+
+    $default  reduce using rule 25 (CMD_FOR)
+
+
+State 162
+
+    2 CMDs: CMDs . CMD
+   18 CMD_FUNC: FUNCTION ID $@1 '(' EMPILHA_TS LISTA_PARAMs ')' '{' CMDs . '}'
+
+    IF        shift, and go to state 4
+    FOR       shift, and go to state 5
+    WHILE     shift, and go to state 6
+    LET       shift, and go to state 7
+    CONST     shift, and go to state 8
+    VAR       shift, and go to state 9
+    OBJ       shift, and go to state 10
+    ARRAY     shift, and go to state 11
+    FUNCTION  shift, and go to state 12
+    RETURN    shift, and go to state 13
+    ID        shift, and go to state 14
+    CDOUBLE   shift, and go to state 15
+    CSTRING   shift, and go to state 16
+    CINT      shift, and go to state 17
+    BOOL      shift, and go to state 18
+    '-'       shift, and go to state 19
+    '['       shift, and go to state 20
+    '('       shift, and go to state 21
+    '{'       shift, and go to state 22
+    ';'       shift, and go to state 23
+    '}'       shift, and go to state 163
+
+    CMD         go to state 24
+    CMD_FUNC    go to state 25
+    CMD_FOR     go to state 26
+    CMD_IF      go to state 27
+    CMD_WHILE   go to state 28
+    CMD_LET     go to state 29
+    CMD_VAR     go to state 30
+    CMD_CONST   go to state 31
+    E           go to state 32
+    LVALUEPROP  go to state 33
+
+
+State 163
+
+   18 CMD_FUNC: FUNCTION ID $@1 '(' EMPILHA_TS LISTA_PARAMs ')' '{' CMDs '}' .
+
+    $default  reduce using rule 18 (CMD_FUNC)

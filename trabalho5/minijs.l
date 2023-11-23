@@ -12,28 +12,30 @@ DOUBLE  {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 
 %%
 
-"\t"        { coluna += 4;                }
-" "         { coluna++;                   }
-"\n"        { linha++; coluna = 1;        }
-"{}"        { return token( OBJ );        }
-"[]"        { return token( ARRAY );      }
-"&&"        { return token( AND );        }
-"||"        { return token( OR );         }
-"<="        { return token( ME_IG );      }
-">="        { return token( MA_IG );      }
-"!="        { return token( DIF );        }
-"=="        { return token( IGUAL );      }
-"+="        { return token( MAIS_IGUAL ); }
-"++"        { return token( MAIS_MAIS );  }
-"if"        { return token( IF );         }
-"for"       { return token( FOR );        }
-"let"       { return token( LET );        }
-"var"       { return token( VAR );        }
-"else"      { return token( ELSE );       }
-"const"     { return token( CONST );      }
-"while"     { return token( WHILE );      }
-"return"    { return token( RETURN );       }
-"function"  { return token( FUNCTION );   }
+"\t"        { coluna += 4;                       }
+" "         { coluna++;                          }
+"\n"        { linha++; coluna = 1;               }
+"{}"        { return token( OBJ );               }
+"[]"        { return token( ARRAY );             }
+"&&"        { return token( AND );               }
+"||"        { return token( OR );                }
+"=>"        { return token( SETA );              }
+"<="        { return token( ME_IG );             }
+">="        { return token( MA_IG );             }
+"!="        { return token( DIF );               }
+"=="        { return token( IGUAL );             }
+"+="        { return token( MAIS_IGUAL );        }
+"++"        { return token( MAIS_MAIS );         }
+"if"        { return token( IF );                }
+"for"       { return token( FOR );               }
+"let"       { return token( LET );               }
+"var"       { return token( VAR );               }
+"else"      { return token( ELSE );              }
+"const"     { return token( CONST );             }
+"while"     { return token( WHILE );             }
+"return"    { return token( RETURN );            }
+"function"  { return token( FUNCTION );          }
+")"/[*]"=>" { return token( PARENTESIS_FUNCAO ); }
 "asm{".*"}"  {  string lexema = trim( yytext + 3, "{}" ); 
                 yylval.c = tokeniza( lexema );
                 coluna += strlen( yytext ); 

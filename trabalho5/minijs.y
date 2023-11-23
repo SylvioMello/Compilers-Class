@@ -69,11 +69,11 @@ vector<string> tokeniza(string asmLine);
 %}
 
 %token IF ELSE FOR WHILE LET CONST VAR OBJ ARRAY FUNCTION ASM RETURN
-%token ID CDOUBLE CSTRING CINT BOOL
+%token ID CDOUBLE CSTRING CINT BOOL SETA PARENTESIS_FUNCAO
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS
 
-%right '='
+%right '=' SETA
 %nonassoc IGUAL MAIS_IGUAL MAIS_MAIS MA_IG ME_IG DIF
 %nonassoc '<' '>' IF ELSE
 %left AND OR
@@ -295,11 +295,11 @@ CONST_VAR : ID '=' E
                      $1.c + $3.c + "=" + "^"; }
           ;
      
-E : LVALUE '=' E 
+E : ID '=' E 
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
-  | LVALUE MAIS_MAIS 
+  | ID MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
-  | LVALUE MAIS_IGUAL E     
+  | ID MAIS_IGUAL E     
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
   | LVALUEPROP '=' E 	
     {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
@@ -345,13 +345,20 @@ E : LVALUE '=' E
   | CINT
   | CSTRING
   | BOOL
-  | LVALUE 
+  | ID 
     { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}  
   | LVALUEPROP
     { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
     { $$.c = $2.c; }
+  | ID EMPILHA_TS 
+    { declara_var( Let, $1.c[0], $1.linha, $1.coluna ); } 
+    SETA E
+    { ts.pop_back(); }
+  | '('  LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
+    { ts.pop_back(); }
   ;
+
 
 LISTA_ARGs : ARGs
            | { $$.clear(); }
@@ -365,10 +372,6 @@ ARGs : ARGs ',' E
          $$.contador++; }
      ;
 
-
-LVALUE : ID 
-       ;
-       
 LVALUEPROP : E '[' E ']' { $$.c = $1.c + $3.c;}
            | E '.' ID    { $$.c = $1.c + $3.c;}
            ;
