@@ -68,8 +68,8 @@ vector<string> tokeniza(string asmLine);
 
 %}
 
-%token IF ELSE FOR WHILE LET CONST VAR OBJ ARRAY FUNCTION ASM RETURN
-%token ID CDOUBLE CSTRING CINT BOOL SETA PARENTESIS_FUNCAO
+%token IF ELSE FOR WHILE LET CONST VAR ARRAY FUNCTION ASM RETURN
+%token ID CDOUBLE CSTRING CINT BOOL SETA PARENTESIS_FUNCAO EMPTY_BLOCK
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS
 
@@ -108,6 +108,8 @@ CMD : CMD_LET ';'
     | E ';'
       { $$.c = $1.c + "^";}
     | ';' 
+      { $$.clear(); }
+    | EMPTY_BLOCK
       { $$.clear(); }
     ;
 
@@ -339,8 +341,6 @@ E : ID '=' E
     {$$.c = vector<string>{"{}"};}
   | ARRAY            
     {$$.c = vector<string>{"[]"};}
-  | OBJ
-    {$$.c = vector<string>{"{}"};}
   | CDOUBLE
   | CINT
   | CSTRING
@@ -354,7 +354,17 @@ E : ID '=' E
   | ID EMPILHA_TS 
     { declara_var( Let, $1.c[0], $1.linha, $1.coluna ); } 
     SETA E
-    { ts.pop_back(); }
+    { string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
+      string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
+      
+      $$.c = $1.c + "&" + $1.c + "{}" + "'&funcao'" +
+            lbl_endereco_funcao + "[<=]" + "=" + "^";
+  
+      funcoes = funcoes + definicao_lbl_endereco_funcao + $5.c +
+                "undefined" + "@" + "'&retorno'" + "@"+ "~";
+      ts.pop_back();
+      is_function_scope = false; 
+    }
   | '('  LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
     { ts.pop_back(); }
   ;
