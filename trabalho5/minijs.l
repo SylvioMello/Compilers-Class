@@ -17,7 +17,6 @@ DOUBLE      {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 "\t"              { coluna += 4;                       }
 " "               { coluna++;                          }
 "\n"              { linha++; coluna = 1;               }
-"[]"              { return token( ARRAY );             }
 "&&"              { return token( AND );               }
 "||"              { return token( OR );                }
 "=>"              { return token( SETA );              }

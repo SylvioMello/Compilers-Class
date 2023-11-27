@@ -68,7 +68,7 @@ vector<string> tokeniza(string asmLine);
 
 %}
 
-%token IF ELSE FOR WHILE LET CONST VAR ARRAY FUNCTION ASM RETURN
+%token IF ELSE FOR WHILE LET CONST VAR FUNCTION ASM RETURN
 %token ID CDOUBLE CSTRING CINT BOOL SETA PARENTESIS_FUNCAO EMPTY_BLOCK
 %token AND OR ME_IG MA_IG DIF IGUAL
 %token MAIS_IGUAL MAIS_MAIS
@@ -337,10 +337,7 @@ E : ID '=' E
     }
   | '[' ']'             
     {$$.c = vector<string>{"[]"};}
-  | '{' '}'
-    {$$.c = vector<string>{"{}"};}
-  | ARRAY            
-    {$$.c = vector<string>{"[]"};}
+  | ID '=' ARRAY            
   | CDOUBLE
   | CINT
   | CSTRING
@@ -351,36 +348,72 @@ E : ID '=' E
     { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
     { $$.c = $2.c; }
+  | '(' OBJ ')'
+    { $$.c = $2.c; }
   | ID EMPILHA_TS 
     { declara_var( Let, $1.c[0], $1.linha, $1.coluna ); } 
     SETA E
     { string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
       string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
       
-      $$.c = $1.c + "&" + $1.c + "{}" + "'&funcao'" +
-            lbl_endereco_funcao + "[<=]" + "=" + "^";
+      $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
+            lbl_endereco_funcao + "[<=]";
   
-      funcoes = funcoes + definicao_lbl_endereco_funcao + $5.c +
-                "undefined" + "@" + "'&retorno'" + "@"+ "~";
+      funcoes = funcoes + definicao_lbl_endereco_funcao + $1.c + "&" + $1.c + 
+                "arguments" + "@" + "0" + "[@]" + "=" + "^" + $5.c +
+                "'&retorno'" + "@"+ "~";
       ts.pop_back();
       is_function_scope = false; 
     }
   | '('  LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
     { ts.pop_back(); }
+  | ID '=' OBJ
   ;
 
+ARRAY : '[' ARRAY_ARGs ']'
+      ;
+
+ARRAY_ARGs : ARRAY_ARGs ',' ARRAY_ARG
+              { $$.c = $1.c + $3.c;
+                $$.contador++; }
+           | ARRAY_ARG
+              { $$.c = vector<string>{$$.contador} + $1.c + vector<string>{"[<=]"};
+                $$.contador++; }
+           ;
+    // let a = [2 ,3];
+    // a & a [] 0 2 [<=] 1 3 [<=] = ˆ .
+
+ARRAY_ARG : E
+          | OBJ
+          ;
+
+OBJ : '{' '}'
+    | '{' CAMPOs '}'
+    ;
+
+CAMPOs: CAMPO ',' CAMPOs
+      | CAMPO
+      ;
+
+CAMPO : ID ':' E
+        {$$.c = $1.c + $3.c + "[<=]";}
+      ;
 
 LISTA_ARGs : ARGs
            | { $$.clear(); }
            ;
              
-ARGs : ARGs ',' E
+ARGs : ARGs ',' ARG
        { $$.c = $1.c + $3.c;
          $$.contador++; }
-     | E
+     | ARG
        { $$.c = $1.c;
          $$.contador++; }
      ;
+
+ARG : E
+    | OBJ
+    ;
 
 LVALUEPROP : E '[' E ']' { $$.c = $1.c + $3.c;}
            | E '.' ID    { $$.c = $1.c + $3.c;}
