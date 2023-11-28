@@ -265,7 +265,7 @@ LET_VARs : LET_VAR ',' LET_VARs { $$.c = $1.c + $3.c; }
 
 LET_VAR : ID  
           { $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ); }
-        | ID '=' E
+        | ID '=' OBJ
           { 
             $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) + 
                    $1.c + $3.c + "=" + "^"; }
@@ -280,7 +280,7 @@ VAR_VARs : VAR_VAR ',' VAR_VARs { $$.c = $1.c + $3.c; }
 
 VAR_VAR : ID  
           { $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ); }
-        | ID '=' E
+        | ID '=' OBJ
           {  $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) + 
                     $1.c + $3.c + "=" + "^"; }
         ;
@@ -292,7 +292,7 @@ CONST_VARs : CONST_VAR ',' CONST_VARs { $$.c = $1.c + $3.c; }
            | CONST_VAR
            ;
 
-CONST_VAR : ID '=' E
+CONST_VAR : ID '=' OBJ
             { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
                      $1.c + $3.c + "=" + "^"; }
           ;
@@ -336,8 +336,7 @@ E : ID '=' E
       $$.c = $3.c + to_string( $3.contador ) + $1.c + "$";
     }
   | '[' ']'             
-    {$$.c = vector<string>{"[]"};}
-  | ID '=' ARRAY            
+    {$$.c = vector<string>{"[]"};}          
   | CDOUBLE
   | CINT
   | CSTRING
@@ -368,20 +367,20 @@ E : ID '=' E
   | '('  LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
     { ts.pop_back(); }
   | ID '=' OBJ
+  | ARRAY  
   ;
 
 ARRAY : '[' ARRAY_ARGs ']'
+        {$$.c = "[]" + $2.c;}
       ;
 
 ARRAY_ARGs : ARRAY_ARGs ',' ARRAY_ARG
-              { $$.c = $1.c + $3.c;
+              { $$.c = $1.c + to_string( $1.contador ) + $3.c + "[<=]";
                 $$.contador++; }
            | ARRAY_ARG
-              { $$.c = vector<string>{$$.contador} + $1.c + vector<string>{"[<=]"};
+              { $$.c = to_string( $1.contador ) + $1.c + "[<=]";
                 $$.contador++; }
            ;
-    // let a = [2 ,3];
-    // a & a [] 0 2 [<=] 1 3 [<=] = ˆ .
 
 ARRAY_ARG : E
           | OBJ
@@ -389,13 +388,17 @@ ARRAY_ARG : E
 
 OBJ : '{' '}'
     | '{' CAMPOs '}'
+      {$$.c = "{}" + $2.c;}
     ;
 
 CAMPOs: CAMPO ',' CAMPOs
+        {$$.c = $1.c + $3.c;}
       | CAMPO
       ;
 
 CAMPO : ID ':' E
+        {$$.c = $1.c + $3.c + "[<=]";}
+      | ID ':' OBJ
         {$$.c = $1.c + $3.c + "[<=]";}
       ;
 
