@@ -379,9 +379,8 @@ E : ID '=' E
       
       $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
             lbl_endereco_funcao + "[<=]";
-      funcoes = funcoes + definicao_lbl_endereco_funcao + $2.c + "&" + $2.c + 
-                "arguments" + "@" + "0" + "[@]" + "=" + "^" + $6.c +
-                "'&retorno'" + "@"+ "~";
+      funcoes = funcoes + definicao_lbl_endereco_funcao + $2.c + $6.c + "^" + 
+               "undefined" + "@" + "'&retorno'" + "@"+ "~";
       ts.pop_back(); }
   | ID '=' OBJ
   | ARRAY  

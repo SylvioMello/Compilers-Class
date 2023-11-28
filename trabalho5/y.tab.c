@@ -544,9 +544,9 @@ static const yytype_uint16 yyrline[] =
      297,   298,   301,   304,   310,   312,   314,   316,   318,   320,
      322,   324,   326,   328,   330,   332,   334,   336,   338,   340,
      342,   344,   348,   350,   351,   352,   353,   354,   356,   358,
-     360,   363,   362,   376,   386,   387,   388,   391,   391,   405,
-     409,   412,   417,   418,   421,   422,   426,   428,   431,   433,
-     437,   438,   441,   444,   449,   450,   453,   454
+     360,   363,   362,   376,   385,   386,   387,   390,   390,   404,
+     408,   411,   416,   417,   420,   421,   425,   427,   430,   432,
+     436,   437,   440,   443,   448,   449,   452,   453
 };
 #endif
 
@@ -2023,21 +2023,20 @@ yyreduce:
       
       (yyval).c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
             lbl_endereco_funcao + "[<=]";
-      funcoes = funcoes + definicao_lbl_endereco_funcao + (yyvsp[-4]).c + "&" + (yyvsp[-4]).c + 
-                "arguments" + "@" + "0" + "[@]" + "=" + "^" + (yyvsp[0]).c +
-                "'&retorno'" + "@"+ "~";
+      funcoes = funcoes + definicao_lbl_endereco_funcao + (yyvsp[-4]).c + (yyvsp[0]).c + "^" + 
+               "undefined" + "@" + "'&retorno'" + "@"+ "~";
       ts.pop_back(); }
-#line 2031 "y.tab.c" /* yacc.c:1646  */
+#line 2030 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 391 "minijs.y" /* yacc.c:1646  */
+#line 390 "minijs.y" /* yacc.c:1646  */
     {is_function_scope = true;}
-#line 2037 "y.tab.c" /* yacc.c:1646  */
+#line 2036 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 392 "minijs.y" /* yacc.c:1646  */
+#line 391 "minijs.y" /* yacc.c:1646  */
     { 
              string lbl_endereco_funcao = gera_label( "func_");
              string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
@@ -2049,87 +2048,87 @@ yyreduce:
              ts.pop_back(); 
              is_function_scope = false; 
            }
-#line 2053 "y.tab.c" /* yacc.c:1646  */
+#line 2052 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 406 "minijs.y" /* yacc.c:1646  */
+#line 405 "minijs.y" /* yacc.c:1646  */
     {(yyval).c = "[]" + (yyvsp[-1]).c;}
-#line 2059 "y.tab.c" /* yacc.c:1646  */
+#line 2058 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 410 "minijs.y" /* yacc.c:1646  */
+#line 409 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[-2]).c + to_string( (yyvsp[-2]).contador ) + (yyvsp[0]).c + "[<=]";
                 (yyval).contador++; }
-#line 2066 "y.tab.c" /* yacc.c:1646  */
+#line 2065 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 413 "minijs.y" /* yacc.c:1646  */
+#line 412 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = to_string( (yyvsp[0]).contador ) + (yyvsp[0]).c + "[<=]";
                 (yyval).contador++; }
-#line 2073 "y.tab.c" /* yacc.c:1646  */
+#line 2072 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 423 "minijs.y" /* yacc.c:1646  */
+#line 422 "minijs.y" /* yacc.c:1646  */
     {(yyval).c = "{}" + (yyvsp[-1]).c;}
-#line 2079 "y.tab.c" /* yacc.c:1646  */
+#line 2078 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 427 "minijs.y" /* yacc.c:1646  */
+#line 426 "minijs.y" /* yacc.c:1646  */
     {(yyval).c = (yyvsp[-2]).c + (yyvsp[0]).c;}
-#line 2085 "y.tab.c" /* yacc.c:1646  */
+#line 2084 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 432 "minijs.y" /* yacc.c:1646  */
+#line 431 "minijs.y" /* yacc.c:1646  */
     {(yyval).c = (yyvsp[-2]).c + (yyvsp[0]).c + "[<=]";}
-#line 2091 "y.tab.c" /* yacc.c:1646  */
+#line 2090 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 434 "minijs.y" /* yacc.c:1646  */
+#line 433 "minijs.y" /* yacc.c:1646  */
     {(yyval).c = (yyvsp[-2]).c + (yyvsp[0]).c + "[<=]";}
-#line 2097 "y.tab.c" /* yacc.c:1646  */
+#line 2096 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 438 "minijs.y" /* yacc.c:1646  */
+#line 437 "minijs.y" /* yacc.c:1646  */
     { (yyval).clear(); }
-#line 2103 "y.tab.c" /* yacc.c:1646  */
+#line 2102 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 442 "minijs.y" /* yacc.c:1646  */
+#line 441 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[-2]).c + (yyvsp[0]).c;
          (yyval).contador++; }
-#line 2110 "y.tab.c" /* yacc.c:1646  */
+#line 2109 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 445 "minijs.y" /* yacc.c:1646  */
+#line 444 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[0]).c;
          (yyval).contador++; }
-#line 2117 "y.tab.c" /* yacc.c:1646  */
+#line 2116 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 453 "minijs.y" /* yacc.c:1646  */
+#line 452 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[-3]).c + (yyvsp[-1]).c;}
-#line 2123 "y.tab.c" /* yacc.c:1646  */
+#line 2122 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
-#line 454 "minijs.y" /* yacc.c:1646  */
+#line 453 "minijs.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[-2]).c + (yyvsp[0]).c;}
-#line 2129 "y.tab.c" /* yacc.c:1646  */
+#line 2128 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2133 "y.tab.c" /* yacc.c:1646  */
+#line 2132 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2357,7 +2356,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 458 "minijs.y" /* yacc.c:1906  */
+#line 457 "minijs.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"
