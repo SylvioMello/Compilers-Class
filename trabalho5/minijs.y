@@ -119,14 +119,14 @@ EMPILHA_TS : { ts.push_back( map< string, Simbolo >{} ); }
            ;
 
 CMD_FUNC : FUNCTION ID { declara_var( Var, $2.c[0], $2.linha, $2.coluna ); } 
-             '(' EMPILHA_TS LISTA_PARAMs ')' '{' CMDs '}'
+             '(' EMPILHA_TS LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
            { 
              string lbl_endereco_funcao = gera_label( "func_" + $2.c[0] );
              string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
              
              $$.c = $2.c + "&" + $2.c + "{}"  + "=" + "'&funcao'" +
                     lbl_endereco_funcao + "[=]" + "^";
-             funcoes = funcoes + definicao_lbl_endereco_funcao + $6.c + $9.c +
+             funcoes = funcoes + definicao_lbl_endereco_funcao + $6.c + $10.c +
                        "undefined" + "@" + "'&retorno'" + "@"+ "~";
              ts.pop_back(); 
              is_function_scope = false; 
@@ -141,7 +141,6 @@ PARAMs : PARAMs ',' PARAM
        { // a & a arguments @ 0 [@] = ^ 
          $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string( $1.contador )
                 + "[@]" + "=" + "^"; 
-         is_function_scope = true;
          if( $3.valor_default.size() > 0 ) {
            string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
@@ -160,7 +159,6 @@ PARAMs : PARAMs ',' PARAM
      | PARAM 
        { // a & a arguments @ 0 [@] = ^ 
          $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" + "[@]" + "=" + "^"; 
-         is_function_scope = true;
          if( $1.valor_default.size() > 0 ) {
            string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
@@ -272,7 +270,7 @@ LET_VAR : ID
             $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) + 
                    $1.c + $3.c + "=" + "^"; }
         | ID '=' E
-          { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
+          { $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) + 
                     $1.c + $3.c + "=" + "^"; }                   
         ;
 
@@ -289,7 +287,7 @@ VAR_VAR : ID
           {  $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) + 
                     $1.c + $3.c + "=" + "^"; }
         | ID '=' E
-          { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
+          { $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) + 
                     $1.c + $3.c + "=" + "^"; }                    
         ;
   
@@ -310,7 +308,7 @@ CONST_VAR : ID '=' OBJ
      
      
 E : ID '=' E 
-    {if(is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; } // aqui eh o c = tanto
+    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
   | ID MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | ID MAIS_IGUAL E     
@@ -354,7 +352,7 @@ E : ID '=' E
   | CSTRING
   | BOOL
   | ID 
-    { if(is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}  // aqui eh o print
+    { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}
   | LVALUEPROP
     { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
