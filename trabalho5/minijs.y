@@ -374,7 +374,7 @@ E : ID '=' E
       ts.pop_back(); 
     }
   | '(' LISTA_PARAMs PARENTESIS_FUNCAO EMPILHA_TS SETA E 
-    { string lbl_endereco_funcao = gera_label( "func_" + $2.c[0] );
+    { string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
       string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
       
       $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
@@ -385,7 +385,22 @@ E : ID '=' E
       ts.pop_back(); }
   | ID '=' OBJ
   | ARRAY  
+  | FUNC_ANON
   ;
+
+FUNC_ANON : FUNCTION '(' EMPILHA_TS LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
+           { 
+             string lbl_endereco_funcao = gera_label( "func_");
+             string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
+             
+             $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
+                    lbl_endereco_funcao + "[<=]";
+            funcoes = funcoes + definicao_lbl_endereco_funcao + $4.c + $8.c +
+                      "undefined" + "@" + "'&retorno'" + "@"+ "~";
+             ts.pop_back(); 
+             is_function_scope = false; 
+           }
+          ;
 
 ARRAY : '[' ARRAY_ARGs ']'
         {$$.c = "[]" + $2.c;}
