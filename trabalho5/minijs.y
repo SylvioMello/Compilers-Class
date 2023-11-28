@@ -100,6 +100,8 @@ CMD : CMD_LET ';'
     | CMD_FUNC
     | RETURN E ';'
       { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
+    | RETURN OBJ ';'
+      { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
     | E ASM ';'
       { $$.c = $1.c + $2.c + "^"; }
     | '{' EMPILHA_TS CMDs '}'
@@ -269,6 +271,9 @@ LET_VAR : ID
           { 
             $$.c = declara_var( Let, $1.c[0], $1.linha, $1.coluna ) + 
                    $1.c + $3.c + "=" + "^"; }
+        | ID '=' E
+          { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
+                    $1.c + $3.c + "=" + "^"; }                   
         ;
 
 CMD_VAR : VAR VAR_VARs { $$.c = $2.c; }
@@ -283,6 +288,9 @@ VAR_VAR : ID
         | ID '=' OBJ
           {  $$.c = declara_var( Var, $1.c[0], $1.linha, $1.coluna ) + 
                     $1.c + $3.c + "=" + "^"; }
+        | ID '=' E
+          { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
+                    $1.c + $3.c + "=" + "^"; }                    
         ;
   
 CMD_CONST: CONST CONST_VARs { $$.c = $2.c; }
@@ -295,18 +303,22 @@ CONST_VARs : CONST_VAR ',' CONST_VARs { $$.c = $1.c + $3.c; }
 CONST_VAR : ID '=' OBJ
             { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
                      $1.c + $3.c + "=" + "^"; }
+          | ID '=' E
+            { $$.c = declara_var( Const, $1.c[0], $1.linha, $1.coluna ) + 
+                     $1.c + $3.c + "=" + "^"; }
           ;
      
+     
 E : ID '=' E 
-    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
+    {if(is_function_scope != 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
   | ID MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | ID MAIS_IGUAL E     
-    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
+    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
   | LVALUEPROP '=' E 	
-    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
+    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
-    {checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
+    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
   | E ME_IG E   
     { $$.c = $1.c + $3.c + "<="; }
   | E MA_IG E   
@@ -386,7 +398,7 @@ ARRAY_ARG : E
           | OBJ
           ;
 
-OBJ : '{' '}'
+OBJ : EMPTY_BLOCK
     | '{' CAMPOs '}'
       {$$.c = "{}" + $2.c;}
     ;

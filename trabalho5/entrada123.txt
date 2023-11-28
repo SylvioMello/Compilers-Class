@@ -1,2 +1,17 @@
-let i;
-for( i = 0; i < 10; i++ ) {}
+function log( msg ) {
+  msg asm{println # undefined};
+}
+
+function criaObj() {
+  return { a : [ {}, { teste: 1 }, c=24*8+1 ], b: 'nome', log: x => print(x) };
+}
+
+let obj = [];
+let c;
+{ obj = criaObj();
+let c = [];
+
+log( obj );
+log( obj.a );
+log( obj.a[obj.a[1].teste+1] );
+}
