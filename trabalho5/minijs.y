@@ -373,8 +373,16 @@ E : ID '=' E
                 "'&retorno'" + "@"+ "~";
       ts.pop_back(); 
     }
-  | '('  LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
-    { ts.pop_back(); }
+  | '(' LISTA_PARAMs PARENTESIS_FUNCAO EMPILHA_TS SETA E 
+    { string lbl_endereco_funcao = gera_label( "func_" + $2.c[0] );
+      string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
+      
+      $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
+            lbl_endereco_funcao + "[<=]";
+      funcoes = funcoes + definicao_lbl_endereco_funcao + $2.c + "&" + $2.c + 
+                "arguments" + "@" + "0" + "[@]" + "=" + "^" + $6.c +
+                "'&retorno'" + "@"+ "~";
+      ts.pop_back(); }
   | ID '=' OBJ
   | ARRAY  
   ;
