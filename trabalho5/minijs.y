@@ -134,14 +134,14 @@ CMD_FUNC : FUNCTION ID { declara_var( Var, $2.c[0], $2.linha, $2.coluna ); }
          ;
 
 LISTA_PARAMs : PARAMs
-           | { $$.c.clear(); }
-           ;
+             | { $$.c.clear(); }
+             ;
            
 PARAMs : PARAMs ',' PARAM  
        { // a & a arguments @ 0 [@] = ^ 
          $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string( $1.contador )
                 + "[@]" + "=" + "^"; 
-         is_function_scope = true; 
+         is_function_scope = true;
          if( $3.valor_default.size() > 0 ) {
            string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
@@ -160,7 +160,7 @@ PARAMs : PARAMs ',' PARAM
      | PARAM 
        { // a & a arguments @ 0 [@] = ^ 
          $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" + "[@]" + "=" + "^"; 
-         is_function_scope = true;  
+         is_function_scope = true;
          if( $1.valor_default.size() > 0 ) {
            string lbl_true = gera_label( "lbl_true" );
            string lbl_fim_if = gera_label( "lbl_fim_if" );
@@ -310,7 +310,7 @@ CONST_VAR : ID '=' OBJ
      
      
 E : ID '=' E 
-    {if(is_function_scope != 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
+    {if(is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; } // aqui eh o c = tanto
   | ID MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | ID MAIS_IGUAL E     
@@ -354,7 +354,7 @@ E : ID '=' E
   | CSTRING
   | BOOL
   | ID 
-    { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}  
+    { if(is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}  // aqui eh o print
   | LVALUEPROP
     { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
@@ -362,19 +362,18 @@ E : ID '=' E
   | '(' OBJ ')'
     { $$.c = $2.c; }
   | ID EMPILHA_TS 
-    { declara_var( Let, $1.c[0], $1.linha, $1.coluna ); } 
+    { declara_var( Let, $1.c[0], $1.linha, $1.coluna );  } 
     SETA E
-    { string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
+    { 
+      string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
       string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
       
       $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
             lbl_endereco_funcao + "[<=]";
-  
       funcoes = funcoes + definicao_lbl_endereco_funcao + $1.c + "&" + $1.c + 
                 "arguments" + "@" + "0" + "[@]" + "=" + "^" + $5.c +
                 "'&retorno'" + "@"+ "~";
-      ts.pop_back();
-      is_function_scope = false; 
+      ts.pop_back(); 
     }
   | '('  LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
     { ts.pop_back(); }
