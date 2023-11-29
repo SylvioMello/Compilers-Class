@@ -63,6 +63,7 @@ string gera_label( string prefixo );
 void print( vector<string> codigo );
 vector<string> declara_var( TipoDecl tipo, string nome, int linha, int coluna );
 void checa_simbolo( string nome, bool modificavel );
+void checa_return(bool is_function_scope);
 string trim(string str, string charsToRemove);
 vector<string> tokeniza(string asmLine);
 
@@ -99,7 +100,8 @@ CMD : CMD_LET ';'
     | CMD_WHILE
     | CMD_FUNC
     | RETURN E ';'
-      { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
+      { checa_return(is_function_scope);
+        $$.c = $2.c + "'&retorno'" + "@" + "~"; }
     | RETURN OBJ ';'
       { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
     | E ASM ';'
@@ -360,7 +362,8 @@ E : ID '=' E
   | '(' OBJ ')'
     { $$.c = $2.c; }
   | ID EMPILHA_TS 
-    { declara_var( Let, $1.c[0], $1.linha, $1.coluna );  } 
+    { declara_var( Let, $1.c[0], $1.linha, $1.coluna );
+      is_function_scope = true;  } 
     SETA E
     { 
       string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
@@ -371,6 +374,7 @@ E : ID '=' E
       funcoes = funcoes + definicao_lbl_endereco_funcao + $1.c + "&" + $1.c + 
                 "arguments" + "@" + "0" + "[@]" + "=" + "^" + $5.c +
                 "'&retorno'" + "@"+ "~";
+      is_function_scope = false;
       ts.pop_back(); 
     }
   | '(' LISTA_PARAMs PARENTESIS_FUNCAO EMPILHA_TS SETA E 
@@ -567,6 +571,16 @@ void checa_simbolo( string nome, bool modificavel ) {
 
   cerr << "Variavel '" << nome << "' não declarada." << endl;
   exit( 1 );     
+}
+
+void checa_return(bool is_function_scope) {
+  if (!is_function_scope) {
+    cerr << "Erro: Não é permitido 'return' fora de funções." << endl;
+    exit( 1 ); 
+  }
+  else {
+    return;
+  }
 }
 
 void yyerror( const char* st ) {
