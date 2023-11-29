@@ -52,7 +52,7 @@ vector<string> funcoes;
 extern "C" int yylex();
 int yyparse();
 void yyerror(const char *);
-bool is_function_scope = false;
+int is_function_scope = 0;
 bool operator!=(vector<string> a, vector<string> b);
 vector<string> concatena( vector<string> a, vector<string> b );
 vector<string> operator+( vector<string> a, vector<string> b );
@@ -63,7 +63,7 @@ string gera_label( string prefixo );
 void print( vector<string> codigo );
 vector<string> declara_var( TipoDecl tipo, string nome, int linha, int coluna );
 void checa_simbolo( string nome, bool modificavel );
-void checa_return(bool is_function_scope);
+void checa_return(int is_function_scope);
 string trim(string str, string charsToRemove);
 vector<string> tokeniza(string asmLine);
 
@@ -71,7 +71,7 @@ vector<string> tokeniza(string asmLine);
 
 %token IF ELSE FOR WHILE LET CONST VAR FUNCTION ASM RETURN
 %token ID CDOUBLE CSTRING CINT BOOL SETA PARENTESIS_FUNCAO EMPTY_BLOCK
-%token AND OR ME_IG MA_IG DIF IGUAL
+%token AND OR ME_IG MA_IG DIF IGUAL SETA_OBJ
 %token MAIS_IGUAL MAIS_MAIS
 
 %right '=' SETA
@@ -103,7 +103,8 @@ CMD : CMD_LET ';'
       { checa_return(is_function_scope);
         $$.c = $2.c + "'&retorno'" + "@" + "~"; }
     | RETURN OBJ ';'
-      { $$.c = $2.c + "'&retorno'" + "@" + "~"; }
+      { checa_return(is_function_scope);
+        $$.c = $2.c + "'&retorno'" + "@" + "~"; }
     | E ASM ';'
       { $$.c = $1.c + $2.c + "^"; }
     | '{' EMPILHA_TS CMDs '}'
@@ -121,7 +122,7 @@ EMPILHA_TS : { ts.push_back( map< string, Simbolo >{} ); }
            ;
 
 CMD_FUNC : FUNCTION ID { declara_var( Var, $2.c[0], $2.linha, $2.coluna ); } 
-             '(' LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
+             '(' LISTA_PARAMs ')' '{' {is_function_scope++;} CMDs '}'
            { 
              string lbl_endereco_funcao = gera_label( "func_" + $2.c[0] );
              string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
@@ -131,7 +132,7 @@ CMD_FUNC : FUNCTION ID { declara_var( Var, $2.c[0], $2.linha, $2.coluna ); }
              funcoes = funcoes + definicao_lbl_endereco_funcao + $5.c + $9.c +
                        "undefined" + "@" + "'&retorno'" + "@"+ "~";
              ts.pop_back();
-             is_function_scope = false; 
+             is_function_scope--; 
            }
          ;
 
@@ -312,15 +313,15 @@ CONST_VAR : ID '=' OBJ
      
      
 E : ID '=' E 
-    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
+    {if(is_function_scope == 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
   | ID MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | ID MAIS_IGUAL E     
-    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
+    {if(is_function_scope == 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "@" + $3.c + "+" + "="; }
   | LVALUEPROP '=' E 	
-    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
+    {if(is_function_scope == 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "[=]"; }
   | LVALUEPROP MAIS_IGUAL E
-    {if(!is_function_scope) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
+    {if(is_function_scope == 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $1.c + "[@]" + $3.c + "+" + "[=]"; }
   | E ME_IG E   
     { $$.c = $1.c + $3.c + "<="; }
   | E MA_IG E   
@@ -356,16 +357,16 @@ E : ID '=' E
   | CSTRING
   | BOOL
   | ID 
-    { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}
+    { if(is_function_scope == 0) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "@";}
   | LVALUEPROP
-    { if(!is_function_scope) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
+    { if(is_function_scope == 0) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
     { $$.c = $2.c; }
   | '(' OBJ ')'
     { $$.c = $2.c; }
   | ID EMPILHA_TS 
     { declara_var( Let, $1.c[0], $1.linha, $1.coluna );
-      is_function_scope = true;  } 
+      is_function_scope++;  } 
     SETA E
     { 
       string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
@@ -376,7 +377,7 @@ E : ID '=' E
       funcoes = funcoes + definicao_lbl_endereco_funcao + $1.c + "&" + $1.c + 
                 "arguments" + "@" + "0" + "[@]" + "=" + "^" + $5.c +
                 "'&retorno'" + "@"+ "~";
-      is_function_scope = false;
+      is_function_scope--;
       ts.pop_back(); 
     }
   | '(' LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
@@ -388,12 +389,27 @@ E : ID '=' E
       funcoes = funcoes + definicao_lbl_endereco_funcao + $2.c + $5.c + 
                 "'&retorno'" + "@"+ "~";
       ts.pop_back(); }
+  | ID_SETA SETA_OBJ CMDs '}'
+    { string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
+      string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
+      
+      $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
+            lbl_endereco_funcao + "[<=]";
+      funcoes = funcoes + definicao_lbl_endereco_funcao + $1.c + "&" + $1.c + 
+                "arguments" + "@" + "0" + "[@]" + "=" + "^" + $3.c +
+                "'&retorno'" + "@"+ "~";
+      is_function_scope--;
+      ts.pop_back(); 
+    }
   | ID '=' OBJ
   | ARRAY  
   | FUNC_ANON
   ;
 
-FUNC_ANON : FUNCTION '(' LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
+ID_SETA : ID EMPILHA_TS { declara_var( Let, $1.c[0], $1.linha, $1.coluna ); is_function_scope++;}
+        ;
+
+FUNC_ANON : FUNCTION '(' LISTA_PARAMs ')' '{' {is_function_scope++;} CMDs '}'
            { 
              string lbl_endereco_funcao = gera_label( "func_");
              string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
@@ -403,7 +419,7 @@ FUNC_ANON : FUNCTION '(' LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '
             funcoes = funcoes + definicao_lbl_endereco_funcao + $3.c + $7.c +
                       "undefined" + "@" + "'&retorno'" + "@"+ "~";
              ts.pop_back(); 
-             is_function_scope = false; 
+             is_function_scope--; 
            }
           ;
 
@@ -575,8 +591,8 @@ void checa_simbolo( string nome, bool modificavel ) {
   exit( 1 );     
 }
 
-void checa_return(bool is_function_scope) {
-  if (!is_function_scope) {
+void checa_return(int is_function_scope) {
+  if (is_function_scope == 0) {
     cerr << "Erro: Não é permitido 'return' fora de funções." << endl;
     exit( 1 ); 
   }

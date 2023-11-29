@@ -1,19 +1,4 @@
-function log( msg ) {
-  msg asm{println # undefined};
-}
-
-function map( a, f ) {
-  let res = [];
-
-  forEach( a, (x,j) => (res[j] = f(x)) );
-
-  return res;
-}
-
-function forEach( array, funcao ) {
-  for( let i = 0; i < array.size; i = i + 1 )
-    funcao( array[i], i );
-}
-
-let a = [ 1, 2, 3, 4 ];
-log( map( a, x => x*x + 1 ) );
+let a, f = x => { a = x; return y => a*(y + 1.01); };
+let b = f(9);
+let c = b(7);
+let d = f( 8.1 )( 7.1 );
