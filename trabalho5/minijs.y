@@ -364,10 +364,7 @@ E : ID '=' E
     { $$.c = $2.c; }
   | '(' OBJ ')'
     { $$.c = $2.c; }
-  | ID EMPILHA_TS 
-    { declara_var( Let, $1.c[0], $1.linha, $1.coluna );
-      is_function_scope++;  } 
-    SETA E
+  | ID_SETA SETA E
     { 
       string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
       string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
@@ -375,7 +372,7 @@ E : ID '=' E
       $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
             lbl_endereco_funcao + "[<=]";
       funcoes = funcoes + definicao_lbl_endereco_funcao + $1.c + "&" + $1.c + 
-                "arguments" + "@" + "0" + "[@]" + "=" + "^" + $5.c +
+                "arguments" + "@" + "0" + "[@]" + "=" + "^" + $3.c +
                 "'&retorno'" + "@"+ "~";
       is_function_scope--;
       ts.pop_back(); 

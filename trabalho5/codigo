@@ -1,1 +1,1 @@
-a & f & f {} '&funcao' 64 [<=] = ^ b & b 9 1 f @ $ = ^ c & c 7 1 b @ $ = ^ d & d 7.1 1 8.1 1 f @ $ $ = ^ . y & y arguments @ 0 [@] = ^ a @ y @ 1.01 + * '&retorno' @ ~ x & x arguments @ 0 [@] = ^ a x @ = ^ {} '&funcao' 45 [<=] '&retorno' @ ~ '&retorno' @ ~ 
+f & f {} '&funcao' 60 [<=] = ^ b & b 9 1 f @ $ = ^ c & c 7 1 b @ $ = ^ d & d 7.1 1 8.1 1 f @ $ $ = ^ . y & y arguments @ 0 [@] = ^ x @ y @ * '&retorno' @ ~ x & x arguments @ 0 [@] = ^ {} '&funcao' 43 [<=] '&retorno' @ ~ 
