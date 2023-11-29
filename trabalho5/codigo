@@ -1,1 +1,2 @@
-criaPessoa & criaPessoa {} = '&funcao' 66 [=] ^ log & log {} = '&funcao' 107 [=] ^ p & p 'Maria' 'da Silva' 2 criaPessoa @ $ = ^ p @ 1 p @ nomeCompleto [@] $ 1 log @ $ ^ . pessoa & pessoa arguments @ 0 [@] = ^ pessoa @ nome [@] ' ' + pessoa @ sobrenome [@] + '&retorno' @ ~ nome & nome arguments @ 0 [@] = ^ sobrenome & sobrenome arguments @ 1 [@] = ^ {} nome nome @ [<=] sobrenome sobrenome @ [<=] nomeCompleto {} '&funcao' 43 [<=] [<=] '&retorno' @ ~ undefined @ '&retorno' @ ~ msg & msg arguments @ 0 [@] = ^ msg @ println # undefined ^ undefined @ '&retorno' @ ~ 
+syntax error
+Proximo a: x

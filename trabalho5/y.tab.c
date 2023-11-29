@@ -1634,8 +1634,8 @@ yyreduce:
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           (yyval).c = (yyval).c + declara_var( Var, "placeholder", 1, 1 ) + 
-                 (yyvsp[0]).c + "@" + "placeholder" + "@" + "!=" +
+           (yyval).c = (yyval).c + 
+                 (yyvsp[0]).c + "@" + "undefined" + "@" + "!=" +
                  lbl_true + "?" + (yyvsp[0]).c + (yyvsp[0]).valor_default + "=" + "^" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + 
@@ -1656,8 +1656,8 @@ yyreduce:
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           (yyval).c = (yyval).c + declara_var( Var, "placeholder", 1, 1 ) + 
-                 (yyvsp[0]).c + "@" + "placeholder" + "@" + "!=" +
+           (yyval).c = (yyval).c + 
+                 (yyvsp[0]).c + "@" + "undefined" + "@" + "!=" +
                  lbl_true + "?" + (yyvsp[0]).c + (yyvsp[0]).valor_default + "=" + "^" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + 

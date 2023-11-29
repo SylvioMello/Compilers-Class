@@ -35,7 +35,7 @@ DOUBLE      {DIGITO}+"."{DIGITO}+([Ee][+\-]?{DIGITO}+)?
 "while"           { return token( WHILE );             }
 "return"          { return token( RETURN );            }
 "function"        { return token( FUNCTION );          }
-")"/.*"=>"       { return token( PARENTESIS_FUNCAO ); }
+")"[\n\t ]*"=>"   { return token( PARENTESIS_FUNCAO ); }
 "asm{".*"}"       {  string lexema = trim( yytext + 3, "{}" ); 
                      yylval.c = tokeniza( lexema );
                      coluna += strlen( yytext ); 

@@ -148,8 +148,8 @@ PARAMs : PARAMs ',' PARAM
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $$.c + declara_var( Var, "placeholder", 1, 1 ) + 
-                 $3.c + "@" + "placeholder" + "@" + "!=" +
+           $$.c = $$.c + 
+                 $3.c + "@" + "undefined" + "@" + "!=" +
                  lbl_true + "?" + $3.c + $3.valor_default + "=" + "^" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + 
@@ -166,8 +166,8 @@ PARAMs : PARAMs ',' PARAM
            string lbl_fim_if = gera_label( "lbl_fim_if" );
            string definicao_lbl_true = ":" + lbl_true;
            string definicao_lbl_fim_if = ":" + lbl_fim_if;
-           $$.c = $$.c + declara_var( Var, "placeholder", 1, 1 ) + 
-                 $1.c + "@" + "placeholder" + "@" + "!=" +
+           $$.c = $$.c + 
+                 $1.c + "@" + "undefined" + "@" + "!=" +
                  lbl_true + "?" + $1.c + $1.valor_default + "=" + "^" +
                  lbl_fim_if + "#" +
                  definicao_lbl_true + 
