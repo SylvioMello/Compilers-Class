@@ -136,11 +136,12 @@ CMD_FUNC : FUNCTION ID { declara_var( Var, $2.c[0], $2.linha, $2.coluna ); }
          ;
 
 LISTA_PARAMs : PARAMs
-             | { $$.c.clear(); }
+             | { $$.clear(); }
              ;
            
 PARAMs : PARAMs ',' PARAM  
        { // a & a arguments @ 0 [@] = ^ 
+         declara_var( Let, $3.c[0], $3.linha, $3.coluna ); 
          $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string( $1.contador )
                 + "[@]" + "=" + "^"; 
          if( $3.valor_default.size() > 0 ) {
@@ -160,6 +161,8 @@ PARAMs : PARAMs ',' PARAM
        }
      | PARAM 
        { // a & a arguments @ 0 [@] = ^ 
+         ts.push_back( map< string, Simbolo >{});
+         declara_var( Let, $1.c[0], $1.linha, $1.coluna ); 
          $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" + "[@]" + "=" + "^"; 
          if( $1.valor_default.size() > 0 ) {
            string lbl_true = gera_label( "lbl_true" );
@@ -182,14 +185,12 @@ PARAM : ID
       { $$.c = $1.c;      
         $$.contador = 1;
         $$.valor_default.clear();
-        declara_var( Let, $1.c[0], $1.linha, $1.coluna ); 
       }
     | ID '=' E
       { // Código do IF
         $$.c = $1.c;
         $$.contador = 1;
         $$.valor_default = $3.c;         
-        declara_var( Let, $1.c[0], $1.linha, $1.coluna );
       }
     ;
 
@@ -377,7 +378,7 @@ E : ID '=' E
       is_function_scope = false;
       ts.pop_back(); 
     }
-  | '(' LISTA_PARAMs PARENTESIS_FUNCAO EMPILHA_TS SETA E 
+  | '(' PARAMs PARENTESIS_FUNCAO EMPILHA_TS SETA E 
     { string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
       string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
       
