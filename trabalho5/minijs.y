@@ -121,22 +121,23 @@ EMPILHA_TS : { ts.push_back( map< string, Simbolo >{} ); }
            ;
 
 CMD_FUNC : FUNCTION ID { declara_var( Var, $2.c[0], $2.linha, $2.coluna ); } 
-             '(' EMPILHA_TS LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
+             '(' LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
            { 
              string lbl_endereco_funcao = gera_label( "func_" + $2.c[0] );
              string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
              
              $$.c = $2.c + "&" + $2.c + "{}"  + "=" + "'&funcao'" +
                     lbl_endereco_funcao + "[=]" + "^";
-             funcoes = funcoes + definicao_lbl_endereco_funcao + $6.c + $10.c +
+             funcoes = funcoes + definicao_lbl_endereco_funcao + $5.c + $9.c +
                        "undefined" + "@" + "'&retorno'" + "@"+ "~";
-             ts.pop_back(); 
+             ts.pop_back();
              is_function_scope = false; 
            }
          ;
 
 LISTA_PARAMs : PARAMs
-             | { $$.clear(); }
+             | { ts.push_back( map< string, Simbolo >{}); 
+                 $$.c.clear(); }
              ;
            
 PARAMs : PARAMs ',' PARAM  
@@ -378,28 +379,28 @@ E : ID '=' E
       is_function_scope = false;
       ts.pop_back(); 
     }
-  | '(' PARAMs PARENTESIS_FUNCAO EMPILHA_TS SETA E 
-    { string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
+  | '(' LISTA_PARAMs PARENTESIS_FUNCAO SETA E 
+    { string lbl_endereco_funcao = gera_label( "func_");
       string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
       
       $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
             lbl_endereco_funcao + "[<=]";
-      funcoes = funcoes + definicao_lbl_endereco_funcao + $2.c + $6.c + "^" + 
-               "undefined" + "@" + "'&retorno'" + "@"+ "~";
+      funcoes = funcoes + definicao_lbl_endereco_funcao + $2.c + $5.c + 
+                "'&retorno'" + "@"+ "~";
       ts.pop_back(); }
   | ID '=' OBJ
   | ARRAY  
   | FUNC_ANON
   ;
 
-FUNC_ANON : FUNCTION '(' EMPILHA_TS LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
+FUNC_ANON : FUNCTION '(' LISTA_PARAMs ')' '{' {is_function_scope = true;} CMDs '}'
            { 
              string lbl_endereco_funcao = gera_label( "func_");
              string definicao_lbl_endereco_funcao = ":" + lbl_endereco_funcao;
              
              $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
                     lbl_endereco_funcao + "[<=]";
-            funcoes = funcoes + definicao_lbl_endereco_funcao + $4.c + $8.c +
+            funcoes = funcoes + definicao_lbl_endereco_funcao + $3.c + $7.c +
                       "undefined" + "@" + "'&retorno'" + "@"+ "~";
              ts.pop_back(); 
              is_function_scope = false; 
