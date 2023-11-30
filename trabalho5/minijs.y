@@ -15,7 +15,7 @@ struct Atributos {
 
   // Só para argumentos e parâmetros
   int contador = 0;     
-  
+  int remove_pilha = 1;
   // Só para valor default de argumento        
   vector<string> valor_default; 
 
@@ -26,6 +26,7 @@ struct Atributos {
     linha = 0;
     coluna = 0;
     contador = 0;
+    remove_pilha = 1;
   }
 };
 #define YYSTYPE Atributos
@@ -111,7 +112,7 @@ CMD : CMD_LET ';'
       { ts.pop_back();
         $$.c = vector<string>{"<{"} + $3.c + vector<string>{"}>"}; }
     | E ';'
-      { $$.c = $1.c + "^";}
+      { $1.remove_pilha ? $$.c = $1.c + "^" : $$.c = $1.c;}
     | ';' 
       { $$.clear(); }
     | EMPTY_BLOCK
@@ -314,6 +315,8 @@ CONST_VAR : ID '=' OBJ
      
 E : ID '=' E 
     {if(is_function_scope == 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
+  | ID '=' OBJ
+    {if(is_function_scope == 0) checa_simbolo( $1.c[0], true ); $$.c = $1.c + $3.c + "="; }
   | ID MAIS_MAIS 
     { $$.c = $1.c + "@" +  $1.c + $1.c + "@" + "1" + "+" + "=" + "^"; }
   | ID MAIS_IGUAL E     
@@ -361,9 +364,9 @@ E : ID '=' E
   | LVALUEPROP
     { if(is_function_scope == 0) checa_simbolo( $1.c[0], false ); $$.c = $1.c + "[@]"; }
   | '(' E ')' 
-    { $$.c = $2.c; }
+    { $$.c = $2.c; $$.remove_pilha = 0; }
   | '(' OBJ ')'
-    { $$.c = $2.c; }
+    { $$.c = $2.c; $$.remove_pilha = 0; }
   | ID_SETA SETA E
     { 
       string lbl_endereco_funcao = gera_label( "func_" + $1.c[0] );
@@ -371,6 +374,7 @@ E : ID '=' E
       
       $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
             lbl_endereco_funcao + "[<=]";
+      $$.remove_pilha = 0;
       funcoes = funcoes + definicao_lbl_endereco_funcao + $1.c + "&" + $1.c + 
                 "arguments" + "@" + "0" + "[@]" + "=" + "^" + $3.c +
                 "'&retorno'" + "@"+ "~";
@@ -383,6 +387,7 @@ E : ID '=' E
       
       $$.c = vector<string>{"{}"} + vector<string>{"'&funcao'"} +
             lbl_endereco_funcao + "[<=]";
+      $$.remove_pilha = 0;
       funcoes = funcoes + definicao_lbl_endereco_funcao + $2.c + $5.c + 
                 "'&retorno'" + "@"+ "~";
       ts.pop_back(); }
@@ -398,7 +403,6 @@ E : ID '=' E
       is_function_scope--;
       ts.pop_back(); 
     }
-  | ID '=' OBJ
   | ARRAY  
   | FUNC_ANON
   ;
